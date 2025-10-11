@@ -1,0 +1,3427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Very Beautiful - Interactive Experience | John Heineman & Francesco Mariano</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Very Beautiful">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff6b6b, #feca57);
+            --secondary-gradient: linear-gradient(135deg, #48dbfb, #0fbcf9);
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --accent-yellow: #feca57;
+            --accent-red: #ff6b6b;
+            --accent-blue: #48dbfb;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            z-index: 1001;
+            user-select: none;
+        }
+
+        /* Hamburger Menu Button */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 2px solid var(--accent-red);
+            color: #fff;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+
+        .menu-toggle.active {
+            background: var(--primary-gradient);
+        }
+
+        /* Navigation Links Container */
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Menu collassato (mobile) */
+        @media (max-width: 1024px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 280px;
+                max-height: calc(100vh - 70px);
+                background: rgba(26, 26, 46, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1.5rem;
+                border-left: 2px solid rgba(255, 107, 107, 0.3);
+                box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+                overflow-y: auto;
+                transition: right 0.3s ease;
+                z-index: 1002;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                text-align: left;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+            }
+            
+            /* Overlay quando menu aperto */
+            .menu-overlay {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 999;
+            }
+            
+            .menu-overlay.active {
+                display: block;
+            }
+        }
+
+        /* Desktop - menu sempre visibile */
+        @media (min-width: 1025px) {
+            .menu-toggle {
+                display: none !important;
+            }
+            
+            .nav-links {
+                position: static;
+                width: auto;
+                flex-direction: row;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem 3rem;
+        }
+
+        /* Section Styling */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            min-height: 70vh;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: var(--accent-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .card h3 {
+            color: var(--accent-blue);
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card h4 {
+            color: var(--accent-red);
+            margin: 1.5rem 0 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff6b6b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s linear infinite;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        @keyframes gradient {
+            to { background-position: 200% center; }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            font-size: 0.95rem;
+            color: #888;
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Audio Player */
+        .audio-player-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .audio-player-container h4 {
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 0.5rem;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .audio-player::-webkit-media-controls-panel {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(254, 202, 87, 0.2));
+        }
+
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 2px solid var(--border-color);
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 2rem 1rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            z-index: 2001;
+            background: rgba(255, 107, 107, 0.8);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-box {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-red);
+            transition: all 0.3s;
+        }
+
+        .info-box strong {
+            color: var(--accent-yellow);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box p {
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .clickable-box {
+            cursor: pointer;
+        }
+
+        .clickable-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            background: rgba(255, 107, 107, 0.15);
+            border-left-width: 6px;
+        }
+
+        .clickable-box:active {
+            transform: translateY(-2px);
+        }
+
+        /* Interactive System Boxes - Styled Differently */
+        .interactive-system-box {
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(254, 202, 87, 0.15));
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-system-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .interactive-system-box:hover::before {
+            left: 100%;
+        }
+
+        .interactive-system-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.25), rgba(254, 202, 87, 0.25));
+            border-color: rgba(255, 107, 107, 0.6);
+            border-left-width: 8px;
+        }
+
+        .interactive-system-box strong {
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 10px rgba(254, 202, 87, 0.5);
+        }
+
+        .interactive-system-box::after {
+            content: '→';
+            position: absolute;
+            right: 1.5rem;
+            bottom: 1rem;
+            font-size: 2rem;
+            color: var(--accent-red);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .interactive-system-box:hover::after {
+            opacity: 1;
+            right: 1rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline-year {
+            flex-shrink: 0;
+            width: 100px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 1.5rem;
+            background: rgba(72, 219, 251, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Recording Button */
+        .btn-record {
+            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+        }
+
+        .btn-record.recording {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5); }
+            50% { box-shadow: 0 4px 25px rgba(231, 76, 60, 0.8); }
+        }
+
+        /* Interactive Lab */
+        .lab-container {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 2px solid rgba(72, 219, 251, 0.2);
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            margin-bottom: 1rem;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 15px rgba(254, 202, 87, 0.3);
+        }
+
+        .output-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 10px;
+            min-height: 150px;
+            border: 1px solid rgba(72, 219, 251, 0.3);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        canvas {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin: 1rem 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status.active {
+            background: rgba(72, 219, 251, 0.2);
+            border: 1px solid rgba(72, 219, 251, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .status.recording {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            animation: recordPulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-yellow);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Performance Mode */
+        .live-text {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .video-feed {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            margin: 1.5rem auto;
+            border-radius: 15px;
+            border: 2px solid rgba(72, 219, 251, 0.3);
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(254, 202, 87, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 1rem;
+        }
+
+        /* Bio Section */
+        .bio-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: start;
+            margin: 2rem 0;
+        }
+
+        .bio-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--border-color);
+        }
+
+        .bio-text h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .bio-text ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .bio-text li {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Spectrogram Migliorato */
+        .spectrogram-wrapper {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            padding: 50px 10px 40px 60px;
+            margin: 1rem 0;
+            border: 2px solid var(--border-color);
+        }
+
+        .spectrogram {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #spectrogramCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .freq-labels {
+            position: absolute;
+            left: 0;
+            top: 50px;
+            width: 50px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .freq-label {
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .time-labels {
+            position: absolute;
+            bottom: 0;
+            left: 60px;
+            right: 10px;
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #888;
+            align-items: flex-start;
+            padding-top: 8px;
+        }
+
+        .amplitude-legend {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 200px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .amplitude-legend-title {
+            font-size: 0.8rem;
+            color: var(--accent-yellow);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .amplitude-gradient {
+            height: 20px;
+            background: linear-gradient(to right, 
+                rgb(26, 0, 51),
+                rgb(51, 0, 102),
+                rgb(204, 0, 102),
+                rgb(255, 51, 0),
+                rgb(255, 204, 0),
+                rgb(255, 255, 153)
+            );
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .amplitude-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .spectral-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .spectral-info-box {
+            text-align: center;
+            padding: 0.8rem;
+            background: rgba(72, 219, 251, 0.1);
+            border-radius: 8px;
+        }
+
+        .spectral-info-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .spectral-info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .notation-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border: 2px solid rgba(254, 202, 87, 0.3);
+        }
+
+        /* Alert Box for Recording Status */
+        .alert-box {
+            background: rgba(72, 219, 251, 0.2);
+            border: 2px solid rgba(72, 219, 251, 0.5);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .alert-box.warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-color: rgba(255, 193, 7, 0.5);
+        }
+
+        .alert-box.error {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        /* NUOVO: Preset Sensitivity Controls */
+        .sensitivity-presets {
+            display: flex;
+            gap: 0.8rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            padding: 1rem;
+            background: rgba(72, 219, 251, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(72, 219, 251, 0.2);
+        }
+
+        .preset-label {
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            align-self: center;
+            margin-right: 0.5rem;
+        }
+
+        .preset-btn {
+            background: rgba(72, 219, 251, 0.1);
+            color: #fff;
+            border: 2px solid rgba(72, 219, 251, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .preset-btn:hover {
+            background: rgba(72, 219, 251, 0.2);
+            border-color: rgba(72, 219, 251, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .preset-btn.active {
+            background: var(--secondary-gradient);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(72, 219, 251, 0.4);
+        }
+
+        .preset-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+
+            .bio-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline-year {
+                width: auto;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+                font-size: 2rem;
+            }
+
+            .spectrogram-wrapper {
+                padding: 40px 5px 35px 45px;
+            }
+
+            .spectrogram {
+                height: 250px;
+            }
+
+            .freq-labels {
+                width: 40px;
+                top: 40px;
+                height: 250px;
+            }
+
+            .amplitude-legend {
+                width: 150px;
+                top: 5px;
+                right: 10px;
+                padding: 8px;
+            }
+
+            .spectral-info {
+                grid-template-columns: 1fr;
+            }
+
+            .sensitivity-presets {
+                flex-direction: column;
+            }
+
+            .preset-btn {
+                width: 100%;
+            }
+        }
+
+        .event-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(254, 202, 87, 0.4);
+            background: rgba(254, 202, 87, 0.15);
+            border-left-width: 6px;
+        }
+
+        /* Touch-specific optimizations */
+        @media (hover: none) {
+            .btn:hover,
+            .nav-btn:hover,
+            .clickable-box:hover,
+            .feature-card:hover,
+            .gallery-item:hover {
+                transform: none;
+            }
+
+            .btn:active,
+            .nav-btn:active {
+                transform: scale(0.95);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" id="logoBtn">VERY BEAUTIFUL</div>
+            
+            <!-- Hamburger Menu Button -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span id="menuIcon">☰</span>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <button class="nav-btn active" data-section="home">Home</button>
+                <button class="nav-btn" data-section="opera">The Work</button>
+                <button class="nav-btn" data-section="audio">Audio</button>
+                <button class="nav-btn" data-section="airpiece">Air Piece PDF</button>
+                <button class="nav-btn" data-section="media">Media</button>
+                <button class="nav-btn" data-section="lab">Laboratory</button>
+                <button class="nav-btn" data-section="docs">Documentation</button>
+                <button class="nav-btn" data-section="tech">Technical</button>
+            </div>
+        </div>
+        
+        <!-- Overlay per chiudere menu -->
+        <div class="menu-overlay" id="menuOverlay"></div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>Very Beautiful</h1>
+                <p class="hero-subtitle">
+                    An interactive audiovisual experience exploring the interplay between sound, text, memory, and movement through generative algorithms and real-time analysis.
+                </p>
+                <p class="hero-meta">
+                    John Heineman • Francesco Mariano <br>
+                    Max/MSP • Markov Chains • Computer Vision
+                </p>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="card">
+                <h2>An Interactive Expansion of John Heineman's Work 'Very Beautiful'</h2>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/text.jpg" 
+                         alt="Text generation via Markov chains" 
+                         style="width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); border: 3px solid var(--border-color); cursor: pointer;"
+                         class="modal-trigger" data-src="images/text.jpg">
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
+                        "I remember?" - Algorithmic text generation through third-order Markov chains
+                    </p>
+                </div>
+            </div>
+
+            <!-- Key Features -->
+            <div class="card">
+                <h2>✨ Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card" data-navigate="audio">
+                        <div class="feature-icon">🎵</div>
+                        <h3>Spectral Analysis</h3>
+                        <p>Real-time audio signal decomposition using bark scale algorithms that modulate visual color and luminance.</p>
+                    </div>
+                    <div class="feature-card" data-navigate="lab-markov">
+                        <div class="feature-icon">🎤</div>
+                        <h3>Markov Chains</h3>
+                        <p>Algorithmic text generation that fragments and recomposes the original corpus, amplifying memory and oblivion.</p>
+                    </div>
+                    <div class="feature-card" data-navigate="lab-motion">
+                        <div class="feature-icon">🎥</div>
+                        <h3>Computer Vision</h3>
+                        <p>Analysis of performer movements via webcam, with visibility modulated by sound intensity.</p>
+                    </div>
+                    <div class="feature-card" data-navigate="opera">
+                        <div class="feature-icon">🎼</div>
+                        <h3>Dynamic Score</h3>
+                        <p>Real-time generated performance instructions creating continuous dialogue between musician and system.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access -->
+            <div class="card">
+                <h2>🚀 Start Exploring</h2>
+                <div class="info-grid">
+                    <div class="info-box clickable-box" data-navigate="opera">
+                        <strong>🎭 Discover the Work</strong>
+                        <p>Explore the interactive system and its evolution from Air Piece (1970) to Very Beautiful (2024)</p>
+                    </div>
+                    <div class="info-box clickable-box" data-navigate="audio">
+                        <strong>🎧 Listen</strong>
+                        <p>Three complete audio tracks: Very Beautiful (Tape), Air Piece, and flute performance</p>
+                    </div>
+                    <div class="info-box clickable-box" data-navigate="lab">
+                        <strong>🧪 Experiment</strong>
+                        <p>Use interactive modules: Markov generator, audio analyzer, and performance mode</p>
+                    </div>
+                    <div class="info-box clickable-box" data-navigate="docs">
+                        <strong>📚 Documentation</strong>
+                        <p>Access essays, biographies, historical archives, and technical materials</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPERA SECTION -->
+        <section id="opera" class="section">
+            <div class="card">
+                <h2>🎭 Very Beautiful</h2>
+                <h3>Interactive Audiovisual Installation</h3>
+                
+                <p><strong>Author:</strong> Francesco Mariano</p>
+                <p><strong>Reference Work:</strong> "Very Beautiful" (1973) by John Heineman (Gruppo di Improvvisazione Nuova Consonanza)</p>
+                <p><strong>Technologies:</strong> Max/MSP Jitter, Spectral Analysis, Markov Chains (order 3), Computer Vision</p>
+
+                <h3>The Project</h3>
+                <p>
+                    Very Beautiful is a digital reinterpretation of John Heineman's conceptual work that transforms the original composition into a synesthetic environment where the user becomes co-creator of a unique and unrepeatable audiovisual experience.
+                </p>
+
+                <h3>Tripartite Interaction System</h3>
+                <p style="color: var(--accent-yellow); font-weight: bold; margin-bottom: 1rem;">🖱️ Click on each box to explore the interactive modules:</p>
+                <div class="info-grid">
+                    <div class="info-box interactive-system-box" data-navigate="audio">
+                        <strong>1. Audio Analysis</strong>
+                        <p>Real-time spectral analysis of the flute soloist track. Sound energy is translated into color and luminance modulations through pfft~ and zsa.abs_bark_mel~ 1024 4.</p>
+                    </div>
+                    <div class="info-box interactive-system-box" data-navigate="lab-markov">
+                        <strong>2. Text Generation</strong>
+                        <p>Markov Chain-based algorithm that decomposes and recomposes the original text, generating fragments that amplify fragmented memory and broken syntax.</p>
+                    </div>
+                    <div class="info-box interactive-system-box" data-navigate="lab-motion">
+                        <strong>3. Performative Interaction</strong>
+                        <p>Webcam capturing performer movements, modulated by audio intensity via jit.rgbtoluma, creating direct links between gesture, sound, and image.</p>
+                    </div>
+                </div>
+
+                <h3>Dynamic and Generative Score</h3>
+                <p>
+                    The system also acts as a dynamic score for the soloist. Performative textual instructions such as "EXPLORE SILENCE", "MIDDLE REGISTER", "INTRODUCE WIDE VIBRATO" are generated and triggered by the analysis of the performance itself, transforming execution into continuous dialogue between musician and machine.
+                </p>
+
+                <h3>Open and Modular Work</h3>
+                <p>
+                    The software architecture is designed in a modular and versatile way, easily adaptable to new performative contexts. The interaction source can be reconfigured to analyze collective audience movements, transforming the work from performative experience to participatory installation.
+                </p>
+
+                <!-- Video Demo -->
+                <h3>Video Documentation</h3>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/-KO_oYgZrn8" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- Air Piece Section -->
+            <div class="card">
+                <h2>🌊 Air Piece (1970)</h2>
+                <h3>From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre</h3>
+                
+                <p>
+                    Air Piece represents a pioneering work by John Heineman that transforms the soundscape of Rome's Fiumicino airport into a visionary electroacoustic composition. The work anticipates methodologies that would become central to contemporary data art.
+                </p>
+
+                <h3>Tripartite Structure</h3>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <strong>Section A (0'00"-3'12")</strong>
+                        <p>Ethnomusicological documentation: direct recording of the soundscape with engines, turbines, announcements, and conversations.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Section B (3'12"-8'30")</strong>
+                        <p>Analog algorithmic processing: electroacoustic elaboration through loops, delay, filtering, and creation of "psychedelic vortices".</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Section C (8'30"-13'08")</strong>
+                        <p>Synthesis and meta-commentary: predominance of the Synket with Brechtian device of direct composer intervention.</p>
+                    </div>
+                </div>
+
+                <h3>Technological Innovation</h3>
+                <p>
+                    Use of the <strong>Synket</strong> (analog synthesizer developed by Paul Ketoff at Cinecittà), one of the first systematic integrations between musique concrète and electronic synthesis. The final estrangement device anticipates media art practices that would become canonical in the digital era.
+                </p>
+
+                <h3>Scientific Publication</h3>
+                <p>
+                    <strong>Musicological essay:</strong> "Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"<br>
+                    <strong>ISBN:</strong> 9780244560393 (2020)<br>
+                    <strong>Recognition:</strong> Fondazione Isabella Scelsi, Rome - John Heineman Archive (Fondo 7)
+                </p>
+            </div>
+        </section>
+
+        <!-- AUDIO SECTION -->
+        <section id="audio" class="section">
+            <div class="card">
+                <h2>🎵 Audio Gallery</h2>
+                <p>Explore the three complete audio tracks of the project. Each recording represents a different aspect of the work and its historical evolution.</p>
+
+                <div class="audio-grid">
+                    <!-- Audio 1 -->
+                    <div class="audio-player-container">
+                        <h4>🎼 Very Beautiful - Tape Playback for Performance</h4>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">
+                            Original audio track used for live performances. Includes recorded voices and the complete compositional structure of the work.
+                        </p>
+                        <audio class="audio-player" controls>
+                            <source src="audio/Very_Beautiful_Tape_playbac_for_Performance.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+
+                    <!-- Audio 2 -->
+                    <div class="audio-player-container">
+                        <h4>🌊 Air Piece (1970)</h4>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">
+                            Historic electroacoustic work by John Heineman. Transformation of Fiumicino airport soundscape into musical theatre sound fantasy.
+                        </p>
+                        <audio class="audio-player" controls>
+                            <source src="audio/Air_Piece_4_trk_RnR_Feb_03_25.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+
+                    <!-- Audio 3 -->
+                    <div class="audio-player-container">
+                        <h4>🎺 Very Beautiful - Flute Performance</h4>
+                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">
+                            Live recording with flute soloist improvisation. Demonstrates interaction between performer and generative system in real-time.
+                        </p>
+                        <audio class="audio-player" controls>
+                            <source src="audio/VB_Flauto.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+
+                <h3>🎼 Interactive Timeline - Real-Time Spectrogram Analysis</h3>
+                <p>Advanced visualization with frequency labels, time markers, and amplitude legend. Click anywhere on the spectrogram to navigate through the performance.</p>
+
+                <!-- Audio nascosto per lo spettrogramma -->
+                <audio id="timelineAudio" style="display: none;" crossorigin="anonymous">
+                    <source src="audio/VB_Flauto.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+
+                <!-- Spettrogramma LIVE migliorato con etichette -->
+                <div class="spectrogram-wrapper" id="spectrogramWrapper">
+                    <!-- Etichette Frequenze (asse Y) -->
+                    <div class="freq-labels" id="freqLabels">
+                        <div class="freq-label">15 kHz</div>
+                        <div class="freq-label">10 kHz</div>
+                        <div class="freq-label">5 kHz</div>
+                        <div class="freq-label">2 kHz</div>
+                        <div class="freq-label">1 kHz</div>
+                        <div class="freq-label">500 Hz</div>
+                        <div class="freq-label">50 Hz</div>
+                    </div>
+
+                    <!-- Canvas Spettrogramma -->
+                    <div class="spectrogram" id="spectrogramContainer">
+                        <canvas id="spectrogramCanvas"></canvas>
+                    </div>
+
+                    <!-- Etichette Tempo (asse X) -->
+                    <div class="time-labels" id="timeLabels">
+                        <span>0:00</span>
+                        <span>2:00</span>
+                        <span>4:00</span>
+                        <span>6:00</span>
+                        <span>8:00</span>
+                        <span>10:00</span>
+                        <span>11:20</span>
+                    </div>
+
+                    <!-- Legenda Ampiezza -->
+                    <div class="amplitude-legend">
+                        <div class="amplitude-legend-title">Amplitude (dB)</div>
+                        <div class="amplitude-gradient"></div>
+                        <div class="amplitude-labels">
+                            <span>-60</span>
+                            <span>-40</span>
+                            <span>-20</span>
+                            <span>0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informazioni Spettrali Real-Time -->
+                <div class="spectral-info">
+                    <div class="spectral-info-box">
+                        <div class="spectral-info-label">Peak Frequency</div>
+                        <div class="spectral-info-value" id="peakFreq">-- Hz</div>
+                    </div>
+                    <div class="spectral-info-box">
+                        <div class="spectral-info-label">Spectral Centroid</div>
+                        <div class="spectral-info-value" id="centroidFreq">-- Hz</div>
+                    </div>
+                    <div class="spectral-info-box">
+                        <div class="spectral-info-label">RMS Amplitude</div>
+                        <div class="spectral-info-value" id="rmsAmplitude">-- dB</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" id="playTimelineBtn">▶ Play</button>
+                    <button class="btn btn-secondary" id="resetTimelineBtn">↻ Reset</button>
+                    <div class="status" id="timelineStatus">00:00 / 11:20</div>
+                </div>
+
+                <h3>Annotated Sound Events - Click to Jump</h3>
+                <div class="info-grid">
+                    <div class="info-box event-box" data-time="0" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>0:00-1:53</strong>
+                        <div class="notation-box">◦◦ ≈</div>
+                        <p>Key sounds, rustles. Light attacks in mid frequencies (2-4 kHz)</p>
+                    </div>
+                    <div class="info-box event-box" data-time="113" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>1:53-3:46</strong>
+                        <div class="notation-box">◦ ↗</div>
+                        <p>Flute entries, light attacks. Hints of melodies, rapid ascending scales</p>
+                    </div>
+                    <div class="info-box event-box" data-time="226" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>3:46-5:39</strong>
+                        <div class="notation-box">↗ ↗ ▲</div>
+                        <p>Glissandi, higher notes. Melodic alternation and scattered notes with contrasting dynamics</p>
+                    </div>
+                    <div class="info-box event-box" data-time="339" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>5:39-7:32</strong>
+                        <div class="notation-box">▲ ▲ ⚡</div>
+                        <p>Maximum intensity, extended techniques. Full spectrum up to 12-14 kHz, possible multiphonics</p>
+                    </div>
+                    <div class="info-box event-box" data-time="452" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>7:32-9:25</strong>
+                        <div class="notation-box">≈ ≈ ≈ ↘</div>
+                        <p>Varied dynamics, rustles. Glissandi, breaths, fast ascending scales and arpeggios</p>
+                    </div>
+                    <div class="info-box event-box" data-time="565" style="cursor: pointer; transition: all 0.3s;">
+                        <strong>9:25-11:20</strong>
+                        <div class="notation-box">≈ ◦</div>
+                        <p>Progressive decrease. Residual sounds, light gestures, atmospheric closure</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(72, 219, 251, 0.1); border-radius: 10px; border-left: 3px solid #48dbfb;">
+                    <strong>📖 Symbolic Legend:</strong><br>
+                    ◦ = Articulated sounds | ≈ = Rustles/breaths | ↗↘ = Glissandi | ▲ = High notes | ⚡ = Extended techniques | ~~~ = Breaths/noise
+                </div>
+            </div>
+        </section>
+
+        <!-- AIR PIECE PDF SECTION -->
+        <section id="airpiece" class="section">
+            <div class="card">
+                <h2>📄 Air Piece - Complete Document</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+                    Here you can read the complete musicological essay <strong>"Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"</strong> 
+                    by Francesco Mariano (ISBN 9780244560393, 2020). The document includes in-depth spectral analysis, historical contextualization, and technical documentation of John Heineman's 1970 work.
+                </p>
+
+                <div style="background: rgba(255, 107, 107, 0.1); border: 2px solid rgba(255, 107, 107, 0.3); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+                        <h3 style="color: var(--accent-yellow); margin-bottom: 1rem;">Air Piece Essay (PDF)</h3>
+                        <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                            Complete musicological analysis with spectrographs, frequency analysis, and historical documentation.
+                        </p>
+                        
+                        <button class="btn" onclick="window.open('documents/Air_Piece_Essay.pdf', '_blank')">
+                            📖 Open Air Piece PDF
+                        </button>
+                    </div>
+                </div>
+
+                <h3>📊 Content Summary</h3>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <strong>Part 1: Historical Context</strong>
+                        <p>Gruppo di Improvvisazione Nuova Consonanza (GINC), biographical notes on John Heineman, and the 1960s-70s avant-garde scene in Rome.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Part 2: Spectral Analysis</strong>
+                        <p>Detailed frequency analysis of the three sections (A, B, C) with spectrograms showing the transformation from field recording to electronic composition.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Part 3: Technological Innovation</strong>
+                        <p>Use of the Synket (Ketoff synthesizer), analog processing techniques, and integration between musique concrète and electronic synthesis.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Part 4: Compositional Structure</strong>
+                        <p>Tripartite analysis: ethnomusicological documentation → algorithmic processing → synthesis and meta-commentary.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEDIA SECTION -->
+        <section id="media" class="section">
+            <div class="card">
+                <h2>📸 Media Gallery</h2>
+                <p>Visual documentation of the project: Max/MSP patch screenshots, performance images, and dynamic score indications.</p>
+
+                <h3>Screenshots & Performance</h3>
+                <div class="gallery" id="gallery">
+                    <div class="gallery-item modal-trigger" data-src="images/patch.jpg">
+                        <img src="images/patch.jpg" alt="Max/MSP Patch">
+                        <div class="gallery-caption">
+                            John Heineman
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item modal-trigger" data-src="images/performance1.jpg">
+                        <img src="images/performance1.jpg" alt="Performance 1">
+                        <div class="gallery-caption">
+                            John Heineman e Frederic Rzewski
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item modal-trigger" data-src="images/performance2.jpg">
+                        <img src="images/performance2.jpg" alt="Performance 2">
+                        <div class="gallery-caption">
+                            Gruppo di Improvvisazione Nuova Consonanza
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item modal-trigger" data-src="images/performance3.jpg">
+                        <img src="images/performance3.jpg" alt="Performance 3">
+                        <div class="gallery-caption">
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item modal-trigger" data-src="images/analysis.jpg">
+                        <img src="images/analysis.jpg" alt="Spectral Analysis">
+                        <div class="gallery-caption">
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item modal-trigger" data-src="images/text.jpg">
+                        <img src="images/text.jpg" alt="Text Generation">
+                        <div class="gallery-caption">
+                            "I remember?" - Text generation via Markov chains
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Video Documentation</h3>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/PYq9oTtsibQ" allowfullscreen></iframe>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/-KO_oYgZrn8" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LABORATORY SECTION -->
+        <section id="lab" class="section">
+            <div class="card">
+                <h2>🧪 Interactive Laboratory</h2>
+                <p>Experiment with the core algorithms of the work: Markov generation, spectral audio analysis, and integrated performance mode.</p>
+            </div>
+
+            <!-- Markov Generator -->
+            <div class="card" id="markovSection">
+                <h3>🎤 Markov Text Generator</h3>
+                <p>Enter text and the algorithm will generate variations based on third-order Markov chains, exactly as in the live system.</p>
+                
+                <div class="lab-container">
+                    <textarea 
+                        class="text-input" 
+                        id="markovInput" 
+                        placeholder="Enter your base text here (try with Very Beautiful phrases)..."
+                    >Very beautiful. You speak English? Very very beautiful. I remember everything. You don't remember? I don't remember. Oh, you speak Italian? Very beautiful. I like Rome. Very very beautiful. Beautiful Rome. I remember. Do you remember?</textarea>
+                    
+                    <div class="controls">
+                        <button class="btn" id="generateMarkovBtn">✨ Generate Variation</button>
+                        <button class="btn btn-secondary" id="autoMarkovBtn">🔄 Auto Generate</button>
+                        <div class="status" id="markovStatus">Ready</div>
+                    </div>
+                    
+                    <div class="output-box" id="markovOutput">
+                        <em style="color: #888;">Generated variations will appear here...</em>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(72, 219, 251, 0.1); border-radius: 10px; border-left: 3px solid #48dbfb;">
+                    <strong>💡 How it works:</strong> The algorithm analyzes sequences of 3 consecutive words (trigrams) and builds a probabilistic model. It then generates new text by choosing subsequent words based on observed frequencies, creating sentences that maintain the "style" of the original while being new and unpredictable.
+                </div>
+            </div>
+
+            <!-- Motion Detection with Recording -->
+            <div class="card" id="motionSection">
+                <h3>🎥 Advanced Motion Detection with Recording</h3>
+                <p>The webcam detects your movements and transforms the text in real-time. Record your performance with synchronized audio!  - First activate camera - </p>
+                
+                <!-- NUOVO: Preset di Sensibilità -->
+                <div class="sensitivity-presets">
+                    <span class="preset-label">🌙 Sensitivity:</span>
+                    <button class="preset-btn" id="presetDark" disabled>🌑 Dark Room</button>
+                    <button class="preset-btn active" id="presetNormal" disabled>☀️ Normal</button>
+                    <button class="preset-btn" id="presetBright" disabled>💡 Bright Light</button>
+                </div>
+
+                <div style="padding: 1rem; background: rgba(72, 219, 251, 0.05); border-radius: 10px; margin-bottom: 1rem;">
+                    <strong style="color: var(--accent-blue);">ℹ️ Sensitivity Info:</strong>
+                    <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-secondary);">
+                        <strong>🌑 Dark Room:</strong> Maximum sensitivity for low-light environments. Increases brightness and detects subtle movements.<br>
+                        <strong>☀️ Normal:</strong> Balanced settings for standard indoor lighting conditions.<br>
+                        <strong>💡 Bright Light:</strong> Reduced sensitivity for very bright environments. Prevents over-detection.
+                    </p>
+                </div>
+                
+                <div class="lab-container">
+                    <div style="position: relative; width: 100%; max-width: 640px; margin: 0 auto; height: 480px; background: #000; border-radius: 15px; overflow: hidden; border: 2px solid var(--border-color);">
+                        <video id="motionVideo" autoplay muted style="display: none;"></video>
+                        <canvas id="motionCanvas" style="width: 100%; height: 100%; display: block; border-radius: 15px;"></canvas>
+                        <div id="motionTextOverlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.8); pointer-events: none; white-space: normal; font-weight: bold; z-index: 10; text-align: center; max-width: 85%; line-height: 1.4; padding: 0 1rem;"></div>
+                    </div>
+                    
+                    <div class="controls" style="margin-top: 1.5rem;">
+                        <button class="btn" id="startMotionBtn">🎬 Activate Camera</button>
+                        <button class="btn btn-secondary" id="stopMotionBtn" disabled>⏹ Stop</button>
+                        <button class="btn btn-record" id="recordBtn" disabled>⏺ Start Recording</button>
+                        <button class="btn btn-secondary" id="downloadBtn" style="display: none;">💾 Download Video</button>
+                        <div class="status" id="motionStatus">Camera inactive</div>
+                        <div class="status" id="recordStatus" style="display: none;">Ready to record</div>
+                    </div>
+
+                    <!-- Alert box per messaggi -->
+                    <div id="recordingAlert" class="alert-box" style="display: none;">
+                        <strong>ℹ️ Browser Info:</strong> <span id="alertMessage"></span>
+                    </div>
+
+                    <div id="motionInfo" style="display: none;">
+                        <div class="info-grid" style="margin-top: 1rem;">
+                            <div class="info-box">
+                                <strong>Movement Type</strong>
+                                <p id="movementType" style="font-size: 1.3rem; color: var(--accent-yellow);">--</p>
+                            </div>
+                            <div class="info-box">
+                                <strong>Motion Intensity</strong>
+                                <p id="motionIntensity" style="font-size: 1.3rem; color: var(--accent-yellow);">0%</p>
+                            </div>
+                            <div class="info-box">
+                                <strong>Visible Area</strong>
+                                <p id="visibleArea" style="font-size: 1.3rem; color: var(--accent-yellow);">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden audio player for background music -->
+                    <audio id="motionAudio" loop style="display: none;" crossorigin="anonymous">
+                        <source src="audio/VB_Flauto.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(254, 202, 87, 0.1); border-radius: 10px; border-left: 3px solid #feca57;">
+                    <strong>🎨 How it works:</strong><br>
+                     • <strong>First activate camera</strong> → Adjust the brightness according to your environment<br>
+                    • <strong>No movement</strong> → Black screen, waiting for motion<br>
+                    • <strong>Movement detected</strong> → Moving areas reveal with luminous glow<br>
+                    • <strong>Movement intensity</strong> → Controls text generation and visual effects<br>
+                    • <strong>Four modes</strong> → Still (repetition), Slow (trail), Fast (fragment), Abrupt (glitch)<br>
+                    • <strong>🎵 Audio</strong> → VB_Flauto.mp3 plays automatically when camera activates<br>
+                    • <strong>🎬 Recording</strong> → Click "Start Recording" to capture screen + audio performance<br>
+                    • <strong>🌐 Browser Support</strong> → Best on Chrome/Firefox desktop. Safari/iOS has limited recording support.
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCUMENTATION SECTION -->
+        <section id="docs" class="section">
+            <!-- John Heineman -->
+            <div class="card">
+                <h2>👤 John Heineman</h2>
+                <div class="bio-container">
+                    <div>
+                        <div style="background: linear-gradient(135deg, #2d3561, #1a1f3a); padding: 3rem; border-radius: 15px; text-align: center; font-size: 4rem;">
+                            🎼
+                        </div>
+                    </div>
+                    <div class="bio-text">
+                        <h3>Composer and Pioneer of Electroacoustic Music</h3>
+                        <p>
+                            John Heineman (New York, 1939) is a central figure in the history of Italian and international experimental music. After studies in the United States with Elias Tanenbaum and Jack Beeson, he moved to Italy in 1962 seeking a less academic environment.
+                        </p>
+                        
+                        <h4>Training and Influences</h4>
+                        <ul>
+                            <li>Studies with Elias Tanenbaum (student of Bohuslav Martinů)</li>
+                            <li>Mannes College of Music, Manhattan</li>
+                            <li>Columbia University - composition degree</li>
+                            <li>Direct experience of avant-garde jazz (Charlie Parker, Clifford Brown, John Coltrane)</li>
+                            <li>Advanced studies with Boris Porena and Goffredo Petrassi (Accademia di Santa Cecilia, 1965-66)</li>
+                        </ul>
+
+                        <h4>Gruppo di Improvvisazione Nuova Consonanza</h4>
+                        <p>
+                            Among the founders of GINC (1964) together with Ennio Morricone, Franco Evangelisti, and Mario Bertoncini. Concert activity throughout Europe (1965-1970), with performances at Venice Contemporary Music Festival (1968) and various recordings.
+                        </p>
+
+                        <h4>Major Works</h4>
+                        <ul>
+                            <li><strong>Consequents</strong> (1966) - Accademia di Santa Cecilia Orchestra</li>
+                            <li><strong>Air Piece</strong> (1970) - Electroacoustic conceptual work</li>
+                            <li><strong>Very Beautiful</strong> (1973) - Experimental musical theatre</li>
+                        </ul>
+
+                        <h4>Recognition</h4>
+                        <ul>
+                            <li>Composers Award - Broadcast Music Inc. (1965)</li>
+                            <li>Rome Prize Fellowship - American Academy (1967-69)</li>
+                            <li>Archive at Fondazione Isabella Scelsi, Rome (Fondo 7)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Francesco Mariano -->
+            <div class="card">
+                <h2>👨‍💻 Francesco Mariano</h2>
+                <div class="bio-container">
+                    <div>
+                        <div style="background: linear-gradient(135deg, #1a1f3a, #2d3561); padding: 3rem; border-radius: 15px; text-align: center; font-size: 4rem;">
+                            🎨
+                        </div>
+                    </div>
+                    <div class="bio-text">
+                        <h3>Multimedia Artist and Musician</h3>
+                        <p>
+                            Born October 31, 1973. Sound artist and educator with over 15 years of experience in audiovisual, multimedia, and musical design and teaching. His research focuses on electroacoustic composition, immersive sound space design, and interactive installation creation.
+                        </p>
+
+                        <h4>Current Academic Positions</h4>
+                        <ul>
+                            <li><strong>Accademia di Belle Arti di Macerata</strong> 
+                                <br>Visual and multimedia communication
+                                
+                            </li>
+                            <li><strong>Accademia di Belle Arti di Catania</strong> 
+                                <br>Interaction Design
+                            </li>
+                        </ul>
+
+                        
+
+                        <h4>Research and Publications</h4>
+                        <p>
+                            <strong>Essay: "Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"</strong><br>
+                            ISBN: 9780244560393 (2020)<br>
+                            In-depth musicological analysis of John Heineman's work<br>
+                            Recognition: Fondazione Isabella Scelsi, Rome
+                        </p>
+
+                        <h4>Current Project</h4>
+                        <p>
+                            <strong>Very Beautiful</strong> - Interactive Audiovisual Installation<br>
+                            Digital reinterpretation of Heineman's work developed in Max/MSP/Jitter<br>
+                            Integrated system of spectral analysis, Markov chains, and computer vision
+                        </p>
+
+                        <div class="info-box" style="margin-top: 1rem; background: linear-gradient(135deg, rgba(72, 219, 251, 0.1), rgba(254, 202, 87, 0.1));">
+                            <strong>🎨 Concept, Development & Implementation</strong>
+                            <p>
+                                Francesco Mariano is the creator of the Very Beautiful interactive application: 
+                                from conceptualization and musicological research to Max/MSP/Jitter programming, 
+                                web development, and complete system design. The project synthesizes over 15 years 
+                                of experience in sound art, interactive installations, and multimedia teaching.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historical Timeline -->
+            <div class="card">
+                <h2>📅 Historical Timeline</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1939</div>
+                        <div class="timeline-content">
+                            <strong>Birth of John Heineman</strong>
+                            <p>New York, United States. Beginning of musical studies with particular interest in jazz improvisation.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1962</div>
+                        <div class="timeline-content">
+                            <strong>Move to Italy</strong>
+                            <p>Heineman moves to Rome seeking a less academic and more experimental compositional environment.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1964</div>
+                        <div class="timeline-content">
+                            <strong>Foundation of GINC</strong>
+                            <p>Gruppo di Improvvisazione Nuova Consonanza with Morricone, Evangelisti, and Bertoncini. Beginning of European concert activity.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1970</div>
+                        <div class="timeline-content">
+                            <strong>Air Piece</strong>
+                            <p>Creation of electroacoustic work based on Fiumicino airport soundscape. First performance in Rome on February 15, 1970.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1973</div>
+                        <div class="timeline-content">
+                            <strong>Very Beautiful (original version)</strong>
+                            <p>Composition of the conceptual work that would become the basis for the 2024 interactive project.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020</div>
+                        <div class="timeline-content">
+                            <strong>Musicological Essay Publication</strong>
+                            <p>Francesco Mariano publishes "Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre" (ISBN 9780244560393).</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2024-25</div>
+                        <div class="timeline-content">
+                            <strong>Very Beautiful - Interactive Installation</strong>
+                            <p>Francesco Mariano develops complete digital reinterpretation in Max/MSP with audio analysis, Markov chains, and computer vision system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Archives & Resources -->
+            <div class="card">
+                <h2>📚 Archives and Resources</h2>
+                
+                <h3>Fondazione Isabella Scelsi</h3>
+                <p>
+                    The John Heineman archive is preserved at the Fondazione Isabella Scelsi in Rome (Fondo 7). The foundation is dedicated to contemporary musicological research and preservation of Italian experimental music heritage.
+                </p>
+                <div class="info-box" style="margin: 1rem 0;">
+                    <strong>Archive Information</strong>
+                    <p>
+                        Type: Fondo<br>
+                        Definitive numbering: No. 7<br>
+                        Consistency: 6 folders<br>
+                        Content: Correspondence, press reviews, concert programs, unpublished scores, tapes, digital documents (pdf, audio, video)
+                    </p>
+                </div>
+
+                <h3>Scientific Publications</h3>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <strong>Air Piece (2020)</strong>
+                        <p>
+                            Musicological essay by Francesco Mariano<br>
+                            ISBN: 9780244560393<br>
+                            In-depth analysis of Heineman's work focusing on ecoacoustics and musical theatre
+                        </p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Very Beautiful Documentation</strong>
+                        <p>
+                            Technical sheets, Max/MSP patch screenshots, spectral analysis, annotated timelines available in Media and Technical sections
+                        </p>
+                    </div>
+                </div>
+
+               
+            </div>
+        </section>
+
+        <!-- TECHNICAL SECTION -->
+        <section id="tech" class="section">
+            <div class="card">
+                <div style="background: rgba(255, 107, 107, 0.1); border: 2px solid rgba(255, 107, 107, 0.3); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <h3 style="color: var(--accent-red); margin: 0 0 1rem 0;">Developer & Researcher Section</h3>
+                    <p style="margin: 0; color: var(--text-secondary);">
+                        This section contains <strong>technical documentation</strong> for developers, musicians, and researchers interested in understanding or replicating the Max/MSP implementation. 
+                        If you're just exploring the interactive experience, you can skip this section and focus on the <strong>Laboratory</strong> page for hands-on experimentation.
+                    </p>
+                </div>
+
+                <h2>🛠️ Technical Architecture</h2>
+                <p>Implementation details of the Max/MSP/Jitter system and modular software architecture.</p>
+
+                <h3>Technology Stack</h3>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <strong>Max/MSP 8.0+</strong>
+                        <p>Main development environment for real-time audio/video processing and visual programming</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Jitter</strong>
+                        <p>Library for video processing, 3D graphics, and computer vision integrated in Max</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>ZSA Libraries</strong>
+                        <p>Toolkit for advanced spectral analysis (bark scale, MEL frequency, descriptors)</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>BACH</strong>
+                        <p>Library for musical notation and complex data structures</p>
+                    </div>
+                </div>
+
+                <h3>Core System Modules</h3>
+                
+                <h4>1. Spectral Audio Analysis</h4>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <code style="color: var(--accent-yellow);">
+                        [sfplay~] → [pfft~] → [zsa.abs_bark_mel~ 1024 4]<br>
+                        &nbsp;&nbsp;↓<br>
+                        [spectral mapping] → [color modulation] → [jit.gl.videoplane]
+                    </code>
+                </div>
+                <p>
+                    The audio signal is analyzed through <strong>pfft~</strong> (Fast Fourier Transform) and processed by <strong>zsa.abs_bark_mel~</strong> to obtain a perceptually relevant representation of the spectrum (Bark scale). Spectral data controls visual parameters in real-time.
+                </p>
+
+                <h4>2. Computer Vision and Luminance Analysis</h4>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <code style="color: var(--accent-blue);">
+                        [jit.grab] → [jit.rgb2luma] → [cv.jit.opticalflow]<br>
+                        &nbsp;&nbsp;↓<br>
+                        [luminance analysis] → [audio-driven modulation] → [visual output]
+                    </code>
+                </div>
+                <p>
+                    Webcam captures video through <strong>jit.grab</strong>. Image is converted to luminance with <strong>jit.rgb2luma</strong>, then analyzed for movement via <strong>cv.jit.opticalflow</strong>. Audio signal intensity modulates analysis sensitivity, creating audio-visual coupling.
+                </p>
+
+                <h4>3. Text Generation - Markov Chains</h4>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <code style="color: var(--accent-red);">
+                        [text corpus] → [markov_chain_3rd_order]<br>
+                        &nbsp;&nbsp;↓<br>
+                        [trigram analysis] → [probabilistic generation] → [jit.gl.text]
+                    </code>
+                </div>
+                <p>
+                    <strong>3rd-order Markov chain</strong> algorithm (trigrams) that analyzes original text corpus and generates new sequences maintaining stylistic coherence. Generated words are rendered with <strong>jit.gl.text</strong> with visual attributes (font, size, position, color) controlled by audio analysis.
+                </p>
+
+                <h4>4. Dynamic Generative Score</h4>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                    <code style="color: var(--accent-yellow);">
+                        [performance analysis] → [instruction database]<br>
+                        &nbsp;&nbsp;↓<br>
+                        [trigger system] → [dynamic score display] → [performer feedback]
+                    </code>
+                </div>
+                <p>
+                    System that generates real-time performance instructions based on performance analysis. Multiple implementations: predefined score (from <strong>text/coll</strong>), Markov-generated (algorithmically processed instructions), or completely aleatory (weighted random selection).
+                </p>
+
+                <h3>Modular Architecture</h3>
+                <p>
+                    The system is designed with modular architecture allowing easy reconfiguration:
+                </p>
+                <ul style="margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary);">
+                    <li>Independent modules for audio, video analysis and text generation</li>
+                    <li>Standardized interfaces between modules (OSC messages)</li>
+                    <li>Mappable and configurable parameters via GUI</li>
+                    <li>Possibility of source substitution (live microphone, audio file, MIDI input)</li>
+                    <li>Adaptability to different performative and instrumental setups</li>
+                </ul>
+
+                <h3>System Requirements</h3>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <strong>Hardware</strong>
+                        <p>
+                            • Computer with Max/MSP 8.0+<br>
+                            • HD Webcam (720p+)<br>
+                            • Professional audio interface<br>
+                            • HD projector or high-resolution monitor<br>
+                            • Stereo/multichannel audio diffusion system
+                        </p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Software</strong>
+                        <p>
+                            • Max/MSP 8.0 or higher<br>
+                            • Libraries: ZSA, BACH<br>
+                            • OpenCV for computer vision<br>
+                            • ASIO/CoreAudio audio drivers<br>
+                            • OS: macOS 10.14+ or Windows 10+
+                        </p>
+                    </div>
+                </div>
+
+                <h3>Future Developments</h3>
+                <ul style="margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary);">
+                    <li><strong>Machine Learning:</strong> Integration of neural networks for autonomous algorithmic evolution</li>
+                    <li><strong>Advanced Gestural Analysis:</strong> Computer vision with posture and 3D movement recognition</li>
+                    <li><strong>OSC Control:</strong> Integration with external devices (tablets, IMU sensors, MIDI controllers)</li>
+                    <li><strong>VR/AR:</strong> Versions for virtual and augmented reality for total immersion</li>
+                    <li><strong>Multi-Ensemble Versions:</strong> Adaptations for variable formations and different instruments</li>
+                    <li><strong>Site-Specific Installations:</strong> Variants for particular architectural environments</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>📊 Flow Diagram</h2>
+                <div style="background: rgba(0, 0, 0, 0.5); padding: 2rem; border-radius: 15px; font-family: monospace; overflow-x: auto;">
+                    <pre style="color: var(--text-primary); margin: 0; line-height: 1.8;">
+┌───────────────────────────────────────────────────────────┐
+│                    VERY BEAUTIFUL SYSTEM                        │
+│                   Interactive Architecture                      │
+└───────────────────────────────────────────────────────────┘
+
+┌──────────────────     ┌──────────────────     ┌──────────────────
+│   AUDIO INPUT    │     │   VIDEO INPUT    │     │   TEXT CORPUS    │
+│   (sfplay~/adc~) │     │   (jit.grab)     │     │   (text/coll)    │
+└────────┬─────────┘     └────────┬─────────┘     └────────┬─────────┘
+         │                        │                         │
+         ▼                        ▼                         ▼
+┌──────────────────     ┌──────────────────     ┌──────────────────
+│  SPECTRAL        │     │  LUMINANCE       │     │  MARKOV CHAIN    │
+│  ANALYSIS        │     │  ANALYSIS        │     │  ORDER 3         │
+│  (pfft~+bark)    │     │  (rgb2luma)      │     │  (trigramms)     │
+└────────┬─────────┘     └────────┬─────────┘     └────────┬─────────┘
+         │                        │                         │
+         │    ┌───────────────────┼─────────────────────────┤
+         │    │                   │                     │   │
+         ▼    ▼                   ▼                     ▼   ▼
+    ┌─────────────────    ┌─────────────────    ┌─────────────────
+    │  COLOR          │    │  VISIBILITY     │    │  TEXT           │
+    │  MODULATION     │    │  MODULATION     │    │  GENERATION     │
+    │  (RGB mapping)  │    │  (alpha blend)  │    │  (probabilistic)│
+    └────────┬────────┘    └────────┬────────┘    └────────┬────────┘
+             │                      │                       │
+             └──────────────────────┼───────────────────────┘
+                                    │
+                                    ▼
+                          ┌──────────────────
+                          │  jit.gl.render   │
+                          │  OUTPUT WINDOW   │
+                          └──────────────────┘
+                                    │
+                                    ▼
+                          ┌──────────────────
+                          │  PROJECTOR /     │
+                          │  DISPLAY         │
+                          └──────────────────┘
+
+┌───────────────────────────────────────────────────────────┐
+│  FEEDBACK LOOP: Audio energy → Visual modulation → Performer   │
+│                 Performer gesture → Luminance → Text generation │
+└───────────────────────────────────────────────────────────┘
+                    </pre>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <strong>Very Beautiful</strong> - Interactive Audiovisual Experience<br>
+            John Heineman • Francesco Mariano <br>
+            Developed with Max/MSP • Markov Chains • Computer Vision<br><br>
+            © 2024-2025 - Fondazione Isabella Scelsi Archive (Fondo 7)<br>
+            <em style="font-size: 0.85rem;">Educational and artistic purposes</em>
+        </p>
+    </footer>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // ===== FIX iOS: Debounce per evitare double-firing degli eventi =====
+        let lastEventTime = 0;
+        const DEBOUNCE_DELAY = 500;
+        
+        function debounce(callback, delay = DEBOUNCE_DELAY) {
+            return function(...args) {
+                const now = Date.now();
+                if (now - lastEventTime < delay) {
+                    console.log('⏭️ Skipping duplicate event (iOS fix)');
+                    return;
+                }
+                lastEventTime = now;
+                callback.apply(this, args);
+            };
+        }
+
+        // ===== SENSITIVITY PRESETS CONFIGURATION =====
+        const SENSITIVITY_PRESETS = {
+            dark: {
+                name: 'Dark Room',
+                motionThreshold: 45,           // Molto sensibile
+                dilationRadius: 12,            // Area espansa
+                brightnessBoost: 5.5,          // Aumento luminosità
+                contrastBoost: 1.5,            // Aumento contrasto
+                minMotionPercent: 1.2          // Soglia bassa per attivazione
+            },
+            normal: {
+                name: 'Normal',
+                motionThreshold: 80,           // Sensibilità media
+                dilationRadius: 8,             // Area normale
+                brightnessBoost: 1.0,          // Nessun boost
+                contrastBoost: 1.0,            // Nessun boost
+                minMotionPercent: 2.0          // Soglia normale
+            },
+            bright: {
+                name: 'Bright Light',
+                motionThreshold: 120,          // Meno sensibile
+                dilationRadius: 6,             // Area ridotta
+                brightnessBoost: 0.75,         // Riduzione luminosità
+                contrastBoost: 1.2,            // Leggero aumento contrasto
+                minMotionPercent: 3.5          // Soglia più alta
+            }
+        };
+
+        let currentPreset = SENSITIVITY_PRESETS.normal;
+
+        // ===== NAVIGATION SYSTEM - iOS OPTIMIZED =====
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+        const logoBtn = document.getElementById('logoBtn');
+
+        function showSection(sectionId, scrollToElement = null) {
+            console.log('🔍 Navigating to:', sectionId);
+            
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            const activeBtn = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
+            }
+            
+            if (window.innerWidth <= 1024) {
+                closeMenu();
+            }
+            
+            setTimeout(() => {
+                if (scrollToElement) {
+                    const element = document.getElementById(scrollToElement);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        const handleNavClick = debounce(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const sectionId = this.dataset.section;
+            if (sectionId) {
+                showSection(sectionId);
+            }
+        });
+
+        navBtns.forEach(btn => {
+            if (isTouchDevice) {
+                btn.addEventListener('touchend', handleNavClick, { passive: false });
+            } else {
+                btn.addEventListener('click', handleNavClick, { passive: false });
+            }
+        });
+
+        if (logoBtn) {
+            const logoHandler = debounce(function() {
+                showSection('home');
+            });
+            
+            if (isTouchDevice) {
+                logoBtn.addEventListener('touchend', logoHandler, { passive: false });
+            } else {
+                logoBtn.addEventListener('click', logoHandler);
+            }
+        }
+
+        // ===== FEATURE CARDS NAVIGATION =====
+        const featureCards = document.querySelectorAll('.feature-card');
+        
+        featureCards.forEach(card => {
+            const navigateHandler = debounce(function(e) {
+                e.preventDefault();
+                const target = this.dataset.navigate;
+                
+                if (target === 'audio') {
+                    showSection('audio');
+                } else if (target === 'lab-markov') {
+                    showSection('lab', 'markovSection');
+                } else if (target === 'lab-motion') {
+                    showSection('lab', 'motionSection');
+                } else if (target === 'opera') {
+                    showSection('opera');
+                }
+            });
+            
+            if (isTouchDevice) {
+                card.addEventListener('touchend', navigateHandler, { passive: false });
+            } else {
+                card.addEventListener('click', navigateHandler);
+            }
+        });
+
+        // ===== CLICKABLE INFO BOXES NAVIGATION (includes interactive-system-box) =====
+        const clickableBoxes = document.querySelectorAll('.clickable-box, .interactive-system-box');
+
+        clickableBoxes.forEach(box => {
+            const boxNavigateHandler = debounce(function(e) {
+                e.preventDefault();
+                const target = this.dataset.navigate;
+                
+                if (target === 'audio') {
+                    showSection('audio');
+                } else if (target === 'lab-markov') {
+                    showSection('lab', 'markovSection');
+                } else if (target === 'lab-motion') {
+                    showSection('lab', 'motionSection');
+                } else if (target) {
+                    showSection(target);
+                }
+            });
+            
+            if (isTouchDevice) {
+                box.addEventListener('touchend', boxNavigateHandler, { passive: false });
+            } else {
+                box.addEventListener('click', boxNavigateHandler);
+            }
+        });
+
+        // ===== MENU HAMBURGER FUNCTIONALITY =====
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuIcon = document.getElementById('menuIcon');
+
+        function openMenu() {
+            navLinks.classList.add('active');
+            menuOverlay.classList.add('active');
+            menuToggle.classList.add('active');
+            menuIcon.textContent = '✕';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuIcon.textContent = '☰';
+            document.body.style.overflow = '';
+        }
+
+        function toggleMenu() {
+            if (navLinks.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+
+        const menuToggleHandler = debounce(toggleMenu);
+        
+        if (isTouchDevice) {
+            menuToggle.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                menuToggleHandler();
+            }, { passive: false });
+        } else {
+            menuToggle.addEventListener('click', menuToggleHandler);
+        }
+        
+        const overlayHandler = debounce(closeMenu);
+        
+        if (isTouchDevice) {
+            menuOverlay.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                overlayHandler();
+            }, { passive: false });
+        } else {
+            menuOverlay.addEventListener('click', overlayHandler);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024) {
+                closeMenu();
+            }
+        });
+
+        // ===== SENSITIVITY PRESET BUTTONS =====
+        const presetDarkBtn = document.getElementById('presetDark');
+        const presetNormalBtn = document.getElementById('presetNormal');
+        const presetBrightBtn = document.getElementById('presetBright');
+
+        function setPreset(presetType) {
+            currentPreset = SENSITIVITY_PRESETS[presetType];
+            
+            // Aggiorna UI
+            presetDarkBtn.classList.remove('active');
+            presetNormalBtn.classList.remove('active');
+            presetBrightBtn.classList.remove('active');
+            
+            if (presetType === 'dark') {
+                presetDarkBtn.classList.add('active');
+            } else if (presetType === 'normal') {
+                presetNormalBtn.classList.add('active');
+            } else if (presetType === 'bright') {
+                presetBrightBtn.classList.add('active');
+            }
+            
+            console.log('🌙 Preset changed to:', currentPreset.name);
+            console.log('  - Motion Threshold:', currentPreset.motionThreshold);
+            console.log('  - Dilation Radius:', currentPreset.dilationRadius);
+            console.log('  - Brightness Boost:', currentPreset.brightnessBoost);
+        }
+
+        presetDarkBtn.addEventListener('click', () => setPreset('dark'));
+        presetNormalBtn.addEventListener('click', () => setPreset('normal'));
+        presetBrightBtn.addEventListener('click', () => setPreset('bright'));
+
+        // ===== LIVE SPECTROGRAM =====
+        const timelineAudio = document.getElementById('timelineAudio');
+        const spectrogramCanvas = document.getElementById('spectrogramCanvas');
+        const spectrogramContainer = document.getElementById('spectrogramContainer');
+        const playTimelineBtn = document.getElementById('playTimelineBtn');
+        const resetTimelineBtn = document.getElementById('resetTimelineBtn');
+        const timelineStatus = document.getElementById('timelineStatus');
+        const eventBoxes = document.querySelectorAll('.event-box');
+
+        const peakFreqDisplay = document.getElementById('peakFreq');
+        const centroidFreqDisplay = document.getElementById('centroidFreq');
+        const rmsAmplitudeDisplay = document.getElementById('rmsAmplitude');
+
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let bufferLength;
+        let canvasCtx;
+        let animationId;
+        let spectrogramHistory = [];
+        const MAX_HISTORY_COLUMNS = 1000;
+
+        function initAudioAnalyser() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                
+                const source = audioContext.createMediaElementSource(timelineAudio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+                
+                analyser.fftSize = 4096;
+                analyser.smoothingTimeConstant = 0.8;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                
+                canvasCtx = spectrogramCanvas.getContext('2d');
+                spectrogramCanvas.width = spectrogramContainer.offsetWidth;
+                spectrogramCanvas.height = spectrogramContainer.offsetHeight;
+            }
+        }
+
+        function getPeakFrequency(dataArray) {
+            let maxValue = -Infinity;
+            let maxIndex = 0;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                if (dataArray[i] > maxValue) {
+                    maxValue = dataArray[i];
+                    maxIndex = i;
+                }
+            }
+            
+            const nyquist = audioContext.sampleRate / 2;
+            const frequency = (maxIndex * nyquist) / dataArray.length;
+            return Math.round(frequency);
+        }
+
+        function getSpectralCentroid(dataArray) {
+            let numerator = 0;
+            let denominator = 0;
+            
+            const nyquist = audioContext.sampleRate / 2;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const frequency = (i * nyquist) / dataArray.length;
+                const magnitude = dataArray[i];
+                numerator += frequency * magnitude;
+                denominator += magnitude;
+            }
+            
+            return denominator > 0 ? Math.round(numerator / denominator) : 0;
+        }
+
+        function getRMS(dataArray) {
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                sum += (dataArray[i] / 255) * (dataArray[i] / 255);
+            }
+            const rms = Math.sqrt(sum / dataArray.length);
+            const db = 20 * Math.log10(rms + 0.0001);
+            return Math.round(db);
+        }
+
+        function drawLiveSpectrogram() {
+            if (!timelineAudio || timelineAudio.paused) {
+                return;
+            }
+
+            animationId = requestAnimationFrame(drawLiveSpectrogram);
+
+            analyser.getByteFrequencyData(dataArray);
+
+            const peakFreq = getPeakFrequency(dataArray);
+            const centroidFreq = getSpectralCentroid(dataArray);
+            const rmsDb = getRMS(dataArray);
+
+            peakFreqDisplay.textContent = peakFreq + ' Hz';
+            centroidFreqDisplay.textContent = centroidFreq + ' Hz';
+            rmsAmplitudeDisplay.textContent = rmsDb + ' dB';
+
+            const currentColumn = Array.from(dataArray);
+            spectrogramHistory.push(currentColumn);
+            
+            if (spectrogramHistory.length > MAX_HISTORY_COLUMNS) {
+                spectrogramHistory.shift();
+            }
+
+            canvasCtx.fillStyle = '#000';
+            canvasCtx.fillRect(0, 0, spectrogramCanvas.width, spectrogramCanvas.height);
+
+            canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            canvasCtx.lineWidth = 1;
+            for (let i = 0; i < 7; i++) {
+                const y = (i / 6) * spectrogramCanvas.height;
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(0, y);
+                canvasCtx.lineTo(spectrogramCanvas.width, y);
+                canvasCtx.stroke();
+            }
+
+            const columnWidth = spectrogramCanvas.width / Math.min(spectrogramHistory.length, MAX_HISTORY_COLUMNS);
+            const binHeight = spectrogramCanvas.height / bufferLength;
+            
+            for (let col = 0; col < spectrogramHistory.length; col++) {
+                const column = spectrogramHistory[col];
+                const x = col * columnWidth;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const value = column[i] || 0;
+                    const percent = value / 255;
+                    
+                    const y = spectrogramCanvas.height - ((i + 1) * binHeight);
+                    
+                    let r, g, b;
+                    if (percent < 0.2) {
+                        const t = percent / 0.2;
+                        r = 26 + t * 25;
+                        g = 0;
+                        b = 51 + t * 51;
+                    } else if (percent < 0.4) {
+                        const t = (percent - 0.2) / 0.2;
+                        r = 51 + t * 153;
+                        g = 0;
+                        b = 102 - t * 102;
+                    } else if (percent < 0.6) {
+                        const t = (percent - 0.4) / 0.2;
+                        r = 204 + t * 51;
+                        g = t * 51;
+                        b = 0;
+                    } else if (percent < 0.8) {
+                        const t = (percent - 0.6) / 0.2;
+                        r = 255;
+                        g = 51 + t * 153;
+                        b = 0;
+                    } else {
+                        const t = (percent - 0.8) / 0.2;
+                        r = 255;
+                        g = 204 + t * 51;
+                        b = t * 153;
+                    }
+                    
+                    canvasCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                    canvasCtx.fillRect(x, y, columnWidth + 1, binHeight + 1);
+                }
+            }
+
+            updateTimeDisplay();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimeDisplay() {
+            if (timelineAudio) {
+                const currentTime = timelineAudio.currentTime;
+                const duration = timelineAudio.duration || 680;
+                timelineStatus.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            }
+        }
+
+        if (playTimelineBtn) {
+            playTimelineBtn.addEventListener('click', async () => {
+                if (!timelineAudio) return;
+                
+                if (!audioContext) {
+                    initAudioAnalyser();
+                }
+
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                if (timelineAudio.paused) {
+                    timelineAudio.play();
+                    playTimelineBtn.innerHTML = '⏸ Pause';
+                    drawLiveSpectrogram();
+                } else {
+                    timelineAudio.pause();
+                    playTimelineBtn.innerHTML = '▶ Play';
+                    if (animationId) {
+                        cancelAnimationFrame(animationId);
+                    }
+                }
+            });
+        }
+
+        if (resetTimelineBtn) {
+            resetTimelineBtn.addEventListener('click', () => {
+                if (timelineAudio) {
+                    timelineAudio.pause();
+                    timelineAudio.currentTime = 0;
+                    playTimelineBtn.innerHTML = '▶ Play';
+                    timelineStatus.textContent = '00:00 / 11:20';
+                    spectrogramHistory = [];
+                    
+                    peakFreqDisplay.textContent = '-- Hz';
+                    centroidFreqDisplay.textContent = '-- Hz';
+                    rmsAmplitudeDisplay.textContent = '-- dB';
+                    
+                    if (canvasCtx) {
+                        canvasCtx.fillStyle = '#000';
+                        canvasCtx.fillRect(0, 0, spectrogramCanvas.width, spectrogramCanvas.height);
+                    }
+                    
+                    if (animationId) {
+                        cancelAnimationFrame(animationId);
+                    }
+                }
+            });
+        }
+
+        if (spectrogramContainer) {
+            spectrogramContainer.addEventListener('click', async (e) => {
+                if (!timelineAudio) return;
+                
+                if (!audioContext) {
+                    initAudioAnalyser();
+                }
+                
+                const rect = spectrogramContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const percentage = clickX / rect.width;
+                
+                const duration = timelineAudio.duration || 680;
+                timelineAudio.currentTime = percentage * duration;
+                
+                spectrogramHistory = [];
+                
+                if (timelineAudio.paused) {
+                    if (audioContext.state === 'suspended') {
+                        await audioContext.resume();
+                    }
+                    timelineAudio.play();
+                    playTimelineBtn.innerHTML = '⏸ Pause';
+                    drawLiveSpectrogram();
+                }
+            });
+        }
+
+        eventBoxes.forEach(box => {
+            box.addEventListener('click', async () => {
+                const time = parseInt(box.getAttribute('data-time'));
+                if (timelineAudio) {
+                    timelineAudio.currentTime = time;
+                    
+                    eventBoxes.forEach(b => b.style.background = '');
+                    box.style.background = 'rgba(254, 202, 87, 0.2)';
+                    
+                    spectrogramHistory = [];
+                    
+                    if (timelineAudio.paused) {
+                        if (!audioContext) {
+                            initAudioAnalyser();
+                        }
+                        if (audioContext.state === 'suspended') {
+                            await audioContext.resume();
+                        }
+                        timelineAudio.play();
+                        playTimelineBtn.innerHTML = '⏸ Pause';
+                        drawLiveSpectrogram();
+                    }
+                    
+                    spectrogramContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+
+        if (timelineAudio) {
+            timelineAudio.addEventListener('ended', () => {
+                playTimelineBtn.innerHTML = '↻ Replay';
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            });
+            
+            timelineAudio.addEventListener('loadedmetadata', () => {
+                const duration = timelineAudio.duration;
+                timelineStatus.textContent = `00:00 / ${formatTime(duration)}`;
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            if (spectrogramCanvas && spectrogramContainer) {
+                spectrogramCanvas.width = spectrogramContainer.offsetWidth;
+                spectrogramCanvas.height = spectrogramContainer.offsetHeight;
+            }
+        });
+
+        // ===== MARKOV CHAIN GENERATOR =====
+        class MarkovChain {
+            constructor(order = 3) {
+                this.order = order;
+                this.chain = {};
+            }
+
+            train(text) {
+                const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+                
+                for (let i = 0; i < words.length - this.order; i++) {
+                    const state = words.slice(i, i + this.order).join(' ');
+                    const next = words[i + this.order];
+                    
+                    if (!this.chain[state]) {
+                        this.chain[state] = [];
+                    }
+                    this.chain[state].push(next);
+                }
+            }
+
+            generate(length = 50) {
+                const states = Object.keys(this.chain);
+                if (states.length === 0) return "Enter more text to generate significant variations.";
+                
+                let currentState = states[Math.floor(Math.random() * states.length)];
+                let result = currentState.split(' ');
+                
+                for (let i = 0; i < length - this.order; i++) {
+                    const possibilities = this.chain[currentState];
+                    if (!possibilities || possibilities.length === 0) break;
+                    
+                    const next = possibilities[Math.floor(Math.random() * possibilities.length)];
+                    result.push(next);
+                    
+                    const words = currentState.split(' ');
+                    words.shift();
+                    words.push(next);
+                    currentState = words.join(' ');
+                }
+                
+                result[0] = result[0].charAt(0).toUpperCase() + result[0].slice(1);
+                return result.join(' ') + '.';
+            }
+        }
+
+        const markov = new MarkovChain(3);
+        const markovInput = document.getElementById('markovInput');
+        const markovOutput = document.getElementById('markovOutput');
+        const generateMarkovBtn = document.getElementById('generateMarkovBtn');
+        const autoMarkovBtn = document.getElementById('autoMarkovBtn');
+        const markovStatus = document.getElementById('markovStatus');
+        let autoMarkovActive = false;
+        let autoMarkovInterval;
+
+        if (generateMarkovBtn) {
+            generateMarkovBtn.addEventListener('click', () => {
+                const text = markovInput.value;
+                if (text.trim().length < 30) {
+                    markovOutput.innerHTML = '<em style="color: #ff6b6b;">Please enter at least a few complete sentences to generate significant variations.</em>';
+                    return;
+                }
+                
+                markovStatus.innerHTML = '<span class="loading"></span> Generating...';
+                
+                setTimeout(() => {
+                    markov.train(text);
+                    const generated = markov.generate(Math.floor(Math.random() * 20) + 20);
+                    markovOutput.innerHTML = generated;
+                    markovStatus.textContent = 'Generated!';
+                    
+                    setTimeout(() => {
+                        markovStatus.textContent = 'Ready';
+                    }, 1500);
+                }, 400);
+            });
+        }
+
+        if (autoMarkovBtn) {
+            autoMarkovBtn.addEventListener('click', () => {
+                autoMarkovActive = !autoMarkovActive;
+                
+                if (autoMarkovActive) {
+                    autoMarkovBtn.textContent = '⏸ Pause Auto';
+                    markovStatus.innerHTML = '<span class="loading"></span> Auto-generation active';
+                    markovStatus.classList.add('active');
+                    
+                    markov.train(markovInput.value);
+                    
+                    autoMarkovInterval = setInterval(() => {
+                        const generated = markov.generate(Math.floor(Math.random() * 25) + 15);
+                        markovOutput.innerHTML = generated;
+                    }, 3500);
+                } else {
+                    autoMarkovBtn.textContent = '🔄 Auto Generate';
+                    markovStatus.textContent = 'Ready';
+                    markovStatus.classList.remove('active');
+                    clearInterval(autoMarkovInterval);
+                }
+            });
+        }
+
+        // ===== MOTION DETECTION WITH RECORDING AND SENSITIVITY PRESETS =====
+        let motionStream;
+        let motionCanvas, motionCtx;
+        let motionVideo;
+        let previousFrame = null;
+        let motionAnimationFrame;
+        let motionDetectionActive = false;
+        let currentMotionLevel = 0;
+        let stillFrameCount = 0;
+        let repetitionInterval;
+        let motionHistory = [];
+        const MOTION_HISTORY_SIZE = 10;
+        
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+        let canvasStream;
+        let audioDestination;
+        let recordingAudioContext;
+        
+        const motionWords = [
+            'Very beautiful', 'You speak English?', 'Very very beautiful',
+            'I remember everything', "You don't remember?", "I don't remember",
+            'Oh, you speak Italian?', 'I like Rome', 'Beautiful Rome',
+            'Remember?', 'Very', 'You speak?', 'Everything', 'Beautiful',
+            'I remember', 'Do you remember?', 'Beautiful beautiful'
+        ];
+
+        // ==== FIX: Funzione per determinare il formato video supportato ====
+        function getSupportedMimeType() {
+            const possibleTypes = [
+                'video/webm;codecs=vp9,opus',
+                'video/webm;codecs=vp8,opus',
+                'video/webm;codecs=h264,opus',
+                'video/webm;codecs=vp9',
+                'video/webm;codecs=vp8',
+                'video/webm',
+                'video/mp4;codecs=h264,aac',
+                'video/mp4;codecs=h264',
+                'video/mp4',
+                'video/x-matroska;codecs=avc1',
+                'video/x-matroska'
+            ];
+            
+            for (const type of possibleTypes) {
+                if (MediaRecorder.isTypeSupported(type)) {
+                    console.log('✅ Supported format found:', type);
+                    return type;
+                }
+            }
+            
+            return null;
+        }
+
+        // ==== Funzione per mostrare messaggi all'utente ====
+        function showRecordingAlert(message, type = 'info') {
+            const alertBox = document.getElementById('recordingAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            alertBox.className = 'alert-box';
+            if (type === 'warning') {
+                alertBox.classList.add('warning');
+            } else if (type === 'error') {
+                alertBox.classList.add('error');
+            }
+            
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+        }
+
+        function hideRecordingAlert() {
+            const alertBox = document.getElementById('recordingAlert');
+            alertBox.style.display = 'none';
+        }
+
+        const startMotionBtn = document.getElementById('startMotionBtn');
+        if (startMotionBtn) {
+            startMotionBtn.addEventListener('click', async () => {
+                try {
+                    motionStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { width: 640, height: 480 } 
+                    });
+                    
+                    motionVideo = document.getElementById('motionVideo');
+                    motionCanvas = document.getElementById('motionCanvas');
+                    motionCtx = motionCanvas.getContext('2d');
+                    
+                    motionVideo.srcObject = motionStream;
+                    motionCanvas.width = 640;
+                    motionCanvas.height = 480;
+                    
+                    motionDetectionActive = true;
+                    motionHistory = [];
+                    stillFrameCount = 0;
+                    
+                    document.getElementById('motionStatus').innerHTML = '<span class="loading"></span> Camera active';
+                    document.getElementById('motionStatus').classList.add('active');
+                    document.getElementById('motionInfo').style.display = 'block';
+                    document.getElementById('startMotionBtn').disabled = true;
+                    document.getElementById('stopMotionBtn').disabled = false;
+                    document.getElementById('recordBtn').disabled = false;
+                    document.getElementById('recordStatus').style.display = 'inline-flex';
+                    document.getElementById('recordStatus').textContent = 'Ready to record';
+                    
+                    // Abilita i preset
+                    presetDarkBtn.disabled = false;
+                    presetNormalBtn.disabled = false;
+                    presetBrightBtn.disabled = false;
+                    
+                    const motionAudio = document.getElementById('motionAudio');
+                    motionAudio.volume = 0.7;
+                    motionAudio.play().catch(err => {
+                        console.log('Audio autoplay prevented:', err);
+                    });
+                    
+                    const supportedType = getSupportedMimeType();
+                    if (!supportedType) {
+                        showRecordingAlert('Recording not supported on this browser. Try Chrome desktop.', 'warning');
+                    } else {
+                        const browserInfo = navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                                          navigator.userAgent.includes('Firefox') ? 'Firefox' : 
+                                          navigator.userAgent.includes('Safari') ? 'Safari' : 'this browser';
+                        showRecordingAlert(`Recording ready! Format: ${supportedType.split(';')[0]} (${browserInfo})`, 'info');
+                    }
+                    
+                    motionVideo.addEventListener('loadeddata', () => {
+                        detectMotionReveal();
+                    });
+                    
+                } catch (err) {
+                    document.getElementById('motionStatus').textContent = 'Error: permission denied';
+                    document.getElementById('motionStatus').style.color = '#ff6b6b';
+                    showRecordingAlert('Camera access denied. Please allow camera permissions.', 'error');
+                    console.error('Camera error:', err);
+                }
+            });
+        }
+
+        const recordBtn = document.getElementById('recordBtn');
+        if (recordBtn) {
+            recordBtn.addEventListener('click', async () => {
+                if (!isRecording) {
+                    await startRecording();
+                } else {
+                    stopRecording();
+                }
+            });
+        }
+
+        async function startRecording() {
+            try {
+                hideRecordingAlert();
+                
+                const selectedMimeType = getSupportedMimeType();
+                
+                if (!selectedMimeType) {
+                    showRecordingAlert('Your browser does not support video recording. Please use Chrome, Firefox, or Edge on desktop.', 'error');
+                    throw new Error('No supported video format found');
+                }
+                
+                recordedChunks = [];
+                canvasStream = motionCanvas.captureStream(30);
+                
+                const motionAudioElement = document.getElementById('motionAudio');
+                
+                let audioTracks = [];
+                try {
+                    recordingAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const audioSource = recordingAudioContext.createMediaElementSource(motionAudioElement);
+                    audioDestination = recordingAudioContext.createMediaStreamDestination();
+                    audioSource.connect(audioDestination);
+                    audioSource.connect(recordingAudioContext.destination);
+                    audioTracks = audioDestination.stream.getAudioTracks();
+                } catch (audioError) {
+                    console.warn('Could not capture audio:', audioError);
+                    showRecordingAlert('Recording video only (audio capture not available)', 'warning');
+                }
+                
+                const tracks = [
+                    ...canvasStream.getVideoTracks(),
+                    ...audioTracks
+                ];
+                
+                const combinedStream = new MediaStream(tracks);
+                
+                const videoBitrate = selectedMimeType.includes('vp9') ? 2500000 : 
+                                    selectedMimeType.includes('vp8') ? 2000000 : 
+                                    selectedMimeType.includes('h264') ? 3000000 : 2000000;
+                
+                const options = {
+                    mimeType: selectedMimeType,
+                    videoBitsPerSecond: videoBitrate
+                };
+                
+                if (audioTracks.length > 0) {
+                    options.audioBitsPerSecond = 128000;
+                }
+                
+                mediaRecorder = new MediaRecorder(combinedStream, options);
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: selectedMimeType });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const fileExtension = selectedMimeType.includes('mp4') ? 'mp4' : 'webm';
+                    
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    downloadBtn.style.display = 'inline-block';
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `very-beautiful-performance-${Date.now()}.${fileExtension}`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                    
+                    document.getElementById('recordStatus').textContent = `Recording saved! (${fileExtension.toUpperCase()}) Click download`;
+                    document.getElementById('recordStatus').classList.remove('recording');
+                    showRecordingAlert(`Recording complete! File size: ${(blob.size / 1024 / 1024).toFixed(2)} MB`, 'info');
+                };
+                
+                mediaRecorder.onerror = (event) => {
+                    console.error('MediaRecorder error:', event.error);
+                    showRecordingAlert(`Recording error: ${event.error.name}`, 'error');
+                    isRecording = false;
+                    document.getElementById('recordBtn').textContent = '⏺ Start Recording';
+                    document.getElementById('recordBtn').classList.remove('recording');
+                };
+                
+                mediaRecorder.start(100);
+                isRecording = true;
+                
+                document.getElementById('recordBtn').textContent = '⏹ Stop Recording';
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('recordStatus').textContent = '🔴 Recording...';
+                document.getElementById('recordStatus').classList.add('recording');
+                document.getElementById('downloadBtn').style.display = 'none';
+                
+                showRecordingAlert(`Recording started! Format: ${selectedMimeType.split(';')[0]}`, 'info');
+                
+            } catch (err) {
+                console.error('Recording error:', err);
+                showRecordingAlert(`Error: ${err.message}. Try Chrome desktop for best compatibility.`, 'error');
+                isRecording = false;
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('recordBtn').textContent = '⏺ Start Recording';
+                document.getElementById('recordBtn').classList.remove('recording');
+            }
+        }
+
+        function detectMotionReveal() {
+            if (!motionDetectionActive) return;
+            
+            if (motionVideo.readyState !== motionVideo.HAVE_ENOUGH_DATA) {
+                motionAnimationFrame = requestAnimationFrame(detectMotionReveal);
+                return;
+            }
+            
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 640;
+            tempCanvas.height = 480;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // APPLICAZIONE PRESET: Luminosità e Contrasto
+            tempCtx.filter = `brightness(${currentPreset.brightnessBoost}) contrast(${currentPreset.contrastBoost})`;
+            tempCtx.drawImage(motionVideo, 0, 0, 640, 480);
+            tempCtx.filter = 'none';
+            
+            const currentFrame = tempCtx.getImageData(0, 0, 640, 480);
+            
+            motionCtx.fillStyle = '#000';
+            motionCtx.fillRect(0, 0, 640, 480);
+            
+            if (previousFrame) {
+                let motionAmount = 0;
+                let motionPixels = 0;
+                let visiblePixels = 0;
+                
+                // APPLICAZIONE PRESET: Soglia di movimento
+                const MOTION_THRESHOLD = currentPreset.motionThreshold;
+                
+                const motionMask = new Uint8Array(640 * 480);
+                
+                for (let i = 0; i < currentFrame.data.length; i += 4) {
+                    const diff = Math.abs(currentFrame.data[i] - previousFrame.data[i]) +
+                                Math.abs(currentFrame.data[i+1] - previousFrame.data[i+1]) +
+                                Math.abs(currentFrame.data[i+2] - previousFrame.data[i+2]);
+                    
+                    const pixelIndex = i / 4;
+                    if (diff > MOTION_THRESHOLD) {
+                        motionPixels++;
+                        motionAmount += diff;
+                        motionMask[pixelIndex] = 1;
+                    } else {
+                        motionMask[pixelIndex] = 0;
+                    }
+                }
+                
+                const motionPercentage = (motionPixels / (640 * 480)) * 100;
+                
+                motionHistory.push(motionPercentage);
+                if (motionHistory.length > MOTION_HISTORY_SIZE) {
+                    motionHistory.shift();
+                }
+                
+                const avgMotion = motionHistory.reduce((a, b) => a + b, 0) / motionHistory.length;
+                currentMotionLevel = avgMotion;
+                
+                // APPLICAZIONE PRESET: Soglia minima per attivazione
+                if (avgMotion >= currentPreset.minMotionPercent) {
+                    const revealedImage = tempCtx.createImageData(640, 480);
+                    const dilatedMask = new Uint8Array(640 * 480);
+                    
+                    // APPLICAZIONE PRESET: Raggio di dilatazione
+                    const dilationRadius = currentPreset.dilationRadius;
+                    
+                    for (let y = 0; y < 480; y++) {
+                        for (let x = 0; x < 640; x++) {
+                            const idx = y * 640 + x;
+                            let hasMotionNearby = false;
+                            
+                            for (let dy = -dilationRadius; dy <= dilationRadius; dy++) {
+                                for (let dx = -dilationRadius; dx <= dilationRadius; dx++) {
+                                    const nx = x + dx;
+                                    const ny = y + dy;
+                                    if (nx >= 0 && nx < 640 && ny >= 0 && ny < 480) {
+                                        const nidx = ny * 640 + nx;
+                                        if (motionMask[nidx] === 1) {
+                                            hasMotionNearby = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (hasMotionNearby) break;
+                            }
+                            
+                            if (hasMotionNearby) {
+                                dilatedMask[idx] = 1;
+                                visiblePixels++;
+                            }
+                        }
+                    }
+                    
+                    for (let i = 0; i < currentFrame.data.length; i += 4) {
+                        const pixelIndex = i / 4;
+                        if (dilatedMask[pixelIndex] === 1) {
+                            const x = (pixelIndex % 640);
+                            const y = Math.floor(pixelIndex / 640);
+                            
+                            let minDist = dilationRadius + 1;
+                            for (let dy = -dilationRadius; dy <= dilationRadius; dy++) {
+                                for (let dx = -dilationRadius; dx <= dilationRadius; dx++) {
+                                    const nx = x + dx;
+                                    const ny = y + dy;
+                                    if (nx >= 0 && nx < 640 && ny >= 0 && ny < 480) {
+                                        const nidx = ny * 640 + nx;
+                                        if (motionMask[nidx] === 1) {
+                                            const dist = Math.sqrt(dx * dx + dy * dy);
+                                            minDist = Math.min(minDist, dist);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            const glowIntensity = 1 - (minDist / dilationRadius);
+                            const brightnessFactor = 1 + glowIntensity * 0.5;
+                            
+                            revealedImage.data[i] = Math.min(255, currentFrame.data[i] * brightnessFactor);
+                            revealedImage.data[i+1] = Math.min(255, currentFrame.data[i+1] * brightnessFactor);
+                            revealedImage.data[i+2] = Math.min(255, currentFrame.data[i+2] * brightnessFactor);
+                            revealedImage.data[i+3] = 255;
+                        } else {
+                            revealedImage.data[i] = 0;
+                            revealedImage.data[i+1] = 0;
+                            revealedImage.data[i+2] = 0;
+                            revealedImage.data[i+3] = 255;
+                        }
+                    }
+                    
+                    motionCtx.putImageData(revealedImage, 0, 0);
+                    
+                    motionCtx.globalCompositeOperation = 'screen';
+                    motionCtx.globalAlpha = 0.3;
+                    motionCtx.filter = 'blur(8px)';
+                    motionCtx.putImageData(revealedImage, 0, 0);
+                    motionCtx.globalCompositeOperation = 'source-over';
+                    motionCtx.globalAlpha = 1;
+                    motionCtx.filter = 'none';
+                }
+                
+                const visiblePercentage = (visiblePixels / (640 * 480)) * 100;
+                
+                document.getElementById('motionIntensity').textContent = avgMotion.toFixed(1) + '%';
+                document.getElementById('visibleArea').textContent = visiblePercentage.toFixed(1) + '%';
+                
+                const textOverlay = document.getElementById('motionTextOverlay');
+                const randomWord = motionWords[Math.floor(Math.random() * motionWords.length)];
+                
+                if (avgMotion < currentPreset.minMotionPercent) {
+                    stillFrameCount++;
+                    document.getElementById('movementType').textContent = 'Still';
+                    
+                    if (stillFrameCount > 60) {
+                        if (!repetitionInterval) {
+                            let repeatCount = 0;
+                            const baseWord = motionWords[Math.floor(Math.random() * 3)];
+                            
+                            repetitionInterval = setInterval(() => {
+                                const repetitions = Math.floor(repeatCount / 4) + 1;
+                                const repeated = (baseWord + ' ').repeat(Math.min(repetitions, 4)).trim();
+                                textOverlay.textContent = repeated;
+                                textOverlay.style.fontSize = (1.2 + Math.sin(repeatCount * 0.2) * 0.3) + 'rem';
+                                textOverlay.style.opacity = '1';
+                                textOverlay.style.filter = 'none';
+                                textOverlay.style.letterSpacing = '0px';
+                                textOverlay.style.transform = 'translate(-50%, -50%)';
+                                textOverlay.style.color = '#fff';
+                                repeatCount++;
+                                
+                                if (repeatCount > 20) {
+                                    repeatCount = 0;
+                                }
+                            }, 800);
+                        }
+                    } else {
+                        if (!repetitionInterval) {
+                            textOverlay.textContent = 'Move to reveal...';
+                            textOverlay.style.fontSize = '1.1rem';
+                            textOverlay.style.opacity = '0.5';
+                            textOverlay.style.filter = 'none';
+                            textOverlay.style.letterSpacing = '2px';
+                            textOverlay.style.transform = 'translate(-50%, -50%)';
+                            textOverlay.style.color = '#888';
+                        }
+                    }
+                    
+                } else if (avgMotion >= currentPreset.minMotionPercent && avgMotion < (currentPreset.minMotionPercent * 4)) {
+                    stillFrameCount = 0;
+                    clearInterval(repetitionInterval);
+                    repetitionInterval = null;
+                    
+                    document.getElementById('movementType').textContent = 'Slow';
+                    
+                    textOverlay.textContent = randomWord;
+                    textOverlay.style.fontSize = '1.5rem';
+                    textOverlay.style.opacity = '1';
+                    textOverlay.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,0.8))';
+                    textOverlay.style.letterSpacing = '2px';
+                    textOverlay.style.transform = 'translate(-50%, -50%)';
+                    textOverlay.style.color = '#fff';
+                    
+                } else if (avgMotion >= (currentPreset.minMotionPercent * 4) && avgMotion < (currentPreset.minMotionPercent * 10)) {
+                    stillFrameCount = 0;
+                    clearInterval(repetitionInterval);
+                    repetitionInterval = null;
+                    
+                    document.getElementById('movementType').textContent = 'Fast';
+                    
+                    const fragments = randomWord.split(' ');
+                    const fragmentedText = fragments.map(word => {
+                        const chars = word.split('');
+                        return chars.map((char, i) => 
+                            i % 2 === 0 ? char : ' ' + char + ' '
+                        ).join('');
+                    }).join('  •  ');
+                    
+                    textOverlay.textContent = fragmentedText;
+                    textOverlay.style.fontSize = '1.2rem';
+                    textOverlay.style.opacity = '0.9';
+                    textOverlay.style.letterSpacing = (Math.random() * 8 + 2) + 'px';
+                    textOverlay.style.filter = 'blur(1px) drop-shadow(0 0 15px rgba(255,107,107,0.8))';
+                    textOverlay.style.transform = 'translate(-50%, -50%)';
+                    textOverlay.style.color = '#fff';
+                    
+                } else {
+                    stillFrameCount = 0;
+                    clearInterval(repetitionInterval);
+                    repetitionInterval = null;
+                    
+                    document.getElementById('movementType').textContent = 'Abrupt';
+                    
+                    applyGlitchEffect(textOverlay, randomWord);
+                }
+            }
+            
+            previousFrame = currentFrame;
+            motionAnimationFrame = requestAnimationFrame(detectMotionReveal);
+        }
+
+        function applyGlitchEffect(element, text) {
+            const glitchChars = '!@#$%^&*()_+[]{}|;:,.<>?/~`';
+            let glitchedText = '';
+            
+            for (let char of text) {
+                if (Math.random() < 0.35) {
+                    glitchedText += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                } else {
+                    glitchedText += char;
+                }
+            }
+            
+            element.textContent = glitchedText;
+            element.style.fontSize = (2.5 + Math.random() * 1) + 'rem';
+            element.style.color = `rgb(${100 + Math.random() * 155}, ${100 + Math.random() * 155}, ${255})`;
+            element.style.transform = `translate(${-50 + (Math.random() - 0.5) * 10}%, ${-50 + (Math.random() - 0.5) * 10}%) rotate(${(Math.random() - 0.5) * 8}deg)`;
+            element.style.filter = `hue-rotate(${Math.random() * 360}deg) blur(${Math.random() * 2}px) drop-shadow(0 0 20px rgba(72,219,251,0.9))`;
+            element.style.opacity = 0.8 + Math.random() * 0.2;
+            element.style.letterSpacing = (Math.random() * 10) + 'px';
+            
+            setTimeout(() => {
+                element.textContent = text;
+                element.style.transform = 'translate(-50%, -50%)';
+                element.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,0.8))';
+                element.style.color = '#fff';
+                element.style.letterSpacing = '0px';
+            }, 150);
+        }
+
+        const stopMotionBtn = document.getElementById('stopMotionBtn');
+        if (stopMotionBtn) {
+            stopMotionBtn.addEventListener('click', () => {
+                if (isRecording) {
+                    stopRecording();
+                }
+                
+                if (motionStream) {
+                    motionStream.getTracks().forEach(track => track.stop());
+                    cancelAnimationFrame(motionAnimationFrame);
+                    clearInterval(repetitionInterval);
+                    repetitionInterval = null;
+                    motionDetectionActive = false;
+                    stillFrameCount = 0;
+                    previousFrame = null;
+                    motionHistory = [];
+                    
+                    if (motionCtx) {
+                        motionCtx.fillStyle = '#000';
+                        motionCtx.fillRect(0, 0, 640, 480);
+                    }
+                    
+                    const motionAudio = document.getElementById('motionAudio');
+                    motionAudio.pause();
+                    motionAudio.currentTime = 0;
+                    
+                    if (recordingAudioContext) {
+                        recordingAudioContext.close();
+                        recordingAudioContext = null;
+                    }
+                    
+                    // Disabilita i preset
+                    presetDarkBtn.disabled = true;
+                    presetNormalBtn.disabled = true;
+                    presetBrightBtn.disabled = true;
+                    
+                    document.getElementById('motionStatus').textContent = 'Camera inactive';
+                    document.getElementById('motionStatus').classList.remove('active');
+                    document.getElementById('motionInfo').style.display = 'none';
+                    document.getElementById('startMotionBtn').disabled = false;
+                    document.getElementById('stopMotionBtn').disabled = true;
+                    document.getElementById('recordBtn').disabled = true;
+                    document.getElementById('recordStatus').style.display = 'none';
+                    document.getElementById('motionTextOverlay').textContent = '';
+                    hideRecordingAlert();
+                }
+            });
+        }
+
+        // ===== IMAGE MODAL =====
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalClose = document.getElementById('modalClose');
+
+        function openImageModal(imageSrc) {
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+        }
+
+        function closeImageModal() {
+            modal.classList.remove('active');
+        }
+
+        document.querySelectorAll('.modal-trigger').forEach(trigger => {
+            const modalHandler = debounce(function(e) {
+                e.preventDefault();
+                const imageSrc = this.dataset.src || this.src;
+                openImageModal(imageSrc);
+            });
+            
+            if (isTouchDevice) {
+                trigger.addEventListener('touchend', modalHandler, { passive: false });
+            } else {
+                trigger.addEventListener('click', modalHandler);
+            }
+        });
+
+        if (modalClose) {
+            const closeHandler = debounce(closeImageModal);
+            
+            if (isTouchDevice) {
+                modalClose.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    closeHandler();
+                }, { passive: false });
+            } else {
+                modalClose.addEventListener('click', closeHandler);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeImageModal();
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('Service Worker registered!'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
+
+        console.log('✅ Very Beautiful Interactive - Complete Version with Sensitivity Presets');
+        console.log('✅ All features loaded successfully');
+        console.log('📱 Device type:', isTouchDevice ? 'Touch' : 'Desktop');
+        console.log('📐 Viewport:', window.innerWidth, 'x', window.innerHeight);
+        console.log('🎬 Recording formats checked:', getSupportedMimeType() || 'None supported');
+        console.log('🌙 Sensitivity presets available: Dark Room, Normal, Bright Light');
+    </script>
+</body>
+</html>
