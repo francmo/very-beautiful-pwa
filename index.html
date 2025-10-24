@@ -1122,6 +1122,44 @@
                 transform: scale(0.95);
             }
         }
+
+        /* Markov Order Selector Buttons */
+        .markov-order-btn {
+            padding: 0.8rem 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #495057;
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .markov-order-btn:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .markov-order-btn.active {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            border-color: #0abde3;
+            color: white;
+            box-shadow: 0 4px 16px rgba(72, 219, 251, 0.4);
+        }
+
+        .markov-order-btn.active:hover {
+            background: linear-gradient(135deg, #0abde3 0%, #48dbfb 100%);
+            transform: translateY(-2px);
+        }
+
+        .markov-order-btn small {
+            display: block;
+            margin-top: 0.2rem;
+        }
     </style>
 </head>
 <body>
@@ -1338,19 +1376,7 @@
                         </audio>
                     </div>
 
-                    <!-- Audio 2 -->
-                    <div class="audio-player-container">
-                        <h4>🌊 Air Piece (1970)</h4>
-                        <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">
-                            Historic electroacoustic work by John Heineman. Transformation of Fiumicino airport soundscape into musical theatre sound fantasy.
-                        </p>
-                        <audio class="audio-player" controls>
-                            <source src="audio/Air_Piece_4_trk_RnR_Feb_03_25.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <!-- Audio 3 -->
+                    <!-- Audio 2: Flute Performance -->
                     <div class="audio-player-container">
                         <h4>🎺 Very Beautiful - Flute Performance</h4>
                         <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">
@@ -1595,29 +1621,113 @@
 
             <!-- Markov Generator -->
             <div class="card" id="markovSection">
-                <h3>🎤 Markov Text Generator</h3>
-                <p>Enter text and the algorithm will generate variations based on third-order Markov chains, exactly as in the live system.</p>
-                
+                <h3>🎤 Professional Markov Text Generator</h3>
+                <p>Enter text and the algorithm will generate variations based on Markov chains. Choose different orders to explore how context depth affects text generation.</p>
+
                 <div class="lab-container">
-                    <textarea 
-                        class="text-input" 
-                        id="markovInput" 
-                        placeholder="Enter your base text here (try with Very Beautiful phrases)..."
+                    <textarea
+                        class="text-input"
+                        id="markovInput"
+                        placeholder="Enter your base text here (try with Very Beautiful phrases or any text of your choice)..."
                     >Very beautiful. You speak English? Very very beautiful. I remember everything. You don't remember? I don't remember. Oh, you speak Italian? Very beautiful. I like Rome. Very very beautiful. Beautiful Rome. I remember. Do you remember?</textarea>
-                    
+
+                    <!-- Markov Order Selector -->
+                    <div style="margin: 1.5rem 0; padding: 1.2rem; background: rgba(72, 219, 251, 0.05); border-radius: 10px; border: 1px solid rgba(72, 219, 251, 0.2);">
+                        <label style="display: block; margin-bottom: 0.8rem; font-weight: 600; color: var(--accent-blue);">
+                            🔗 Chain Order (Context Depth):
+                        </label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem;">
+                            <button class="markov-order-btn" data-order="1">
+                                Order 1<br>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Random</small>
+                            </button>
+                            <button class="markov-order-btn" data-order="2">
+                                Order 2<br>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Simple</small>
+                            </button>
+                            <button class="markov-order-btn active" data-order="3">
+                                Order 3<br>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Balanced</small>
+                            </button>
+                            <button class="markov-order-btn" data-order="4">
+                                Order 4<br>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Coherent</small>
+                            </button>
+                        </div>
+                        <div id="orderDescription" style="margin-top: 1rem; padding: 0.8rem; background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 0.9rem; color: #555;">
+                            <strong>Order 3 (Balanced):</strong> Analyzes sequences of 3 words. Creates text that maintains grammatical structure while introducing creative variations. Ideal for poetic and literary texts.
+                        </div>
+                    </div>
+
                     <div class="controls">
                         <button class="btn" id="generateMarkovBtn">✨ Generate Variation</button>
                         <button class="btn btn-secondary" id="autoMarkovBtn">🔄 Auto Generate</button>
                         <div class="status" id="markovStatus">Ready</div>
                     </div>
-                    
+
                     <div class="output-box" id="markovOutput">
                         <em style="color: #888;">Generated variations will appear here...</em>
                     </div>
                 </div>
 
-                <div style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(72, 219, 251, 0.1); border-radius: 10px; border-left: 3px solid #48dbfb;">
-                    <strong>💡 How it works:</strong> The algorithm analyzes sequences of 3 consecutive words (trigrams) and builds a probabilistic model. It then generates new text by choosing subsequent words based on observed frequencies, creating sentences that maintain the "style" of the original while being new and unpredictable.
+                <!-- Educational explanation -->
+                <div style="margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(72, 219, 251, 0.08) 0%, rgba(254, 202, 87, 0.08) 100%); border-radius: 12px; border-left: 4px solid #48dbfb;">
+                    <h4 style="margin-top: 0; color: #48dbfb;">📚 Understanding Markov Chain Orders</h4>
+
+                    <div style="margin-bottom: 1.2rem;">
+                        <strong style="color: #666;">What are Markov Chains?</strong>
+                        <p style="font-size: 0.95rem; line-height: 1.6; color: #555; margin: 0.5rem 0 0 0;">
+                            Markov chains are mathematical models that predict the next element in a sequence based on previous elements.
+                            In text generation, they analyze word patterns and create new sentences by probabilistically choosing words
+                            that naturally follow what came before.
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.2rem;">
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #e17055;">
+                            <strong style="color: #e17055;">🎲 Order 1 (Unigram)</strong>
+                            <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
+                                Looks at only <strong>1 previous word</strong>. Results are often chaotic and surreal, breaking all grammatical rules.
+                                <br><strong>Best for:</strong> Dadaist poetry, experimental art, maximum unpredictability.
+                                <br><strong>Example:</strong> "Beautiful remember. You? Very I Italian."
+                            </p>
+                        </div>
+
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #fdcb6e;">
+                            <strong style="color: #e17055;">🌱 Order 2 (Bigram)</strong>
+                            <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
+                                Looks at <strong>2 previous words</strong>. Creates simple sentences with basic grammar but frequent logic jumps.
+                                <br><strong>Best for:</strong> Fragmented dialogue, stream of consciousness, minimalist texts.
+                                <br><strong>Example:</strong> "Very beautiful Rome. I remember everything beautiful."
+                            </p>
+                        </div>
+
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #48dbfb;">
+                            <strong style="color: #0984e3;">⚖️ Order 3 (Trigram) - Recommended</strong>
+                            <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
+                                Looks at <strong>3 previous words</strong>. Perfect balance between creativity and coherence. Maintains grammatical structure while creating surprising variations.
+                                <br><strong>Best for:</strong> Literary texts, poetry, artistic prose, theatrical scripts.
+                                <br><strong>Example:</strong> "You speak Italian? Very beautiful. I remember everything. Do you remember Rome?"
+                            </p>
+                        </div>
+
+                        <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #00b894;">
+                            <strong style="color: #00b894;">🎯 Order 4 (Tetragram)</strong>
+                            <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
+                                Looks at <strong>4 previous words</strong>. Creates highly coherent text, almost indistinguishable from the original. Requires more input text.
+                                <br><strong>Best for:</strong> Long texts, novels, essays, technical documents.
+                                <br><strong>Example:</strong> "I don't remember. Oh, you speak Italian? Very beautiful. I like Rome."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.2rem; padding: 1rem; background: rgba(254, 202, 87, 0.15); border-radius: 8px;">
+                        <strong style="color: #d63031;">⚠️ Important Note:</strong>
+                        <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; line-height: 1.6;">
+                            Higher orders (3-4) require <strong>more input text</strong> to work well. With short texts, the algorithm may repeat
+                            original phrases or struggle to generate variations. For best results with Order 3-4, provide at least 3-4 paragraphs of text.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -2684,48 +2794,132 @@
         });
 
         // ===== MARKOV CHAIN GENERATOR =====
+        // Professional Markov Chain Generator with Multiple Orders
         class MarkovChain {
             constructor(order = 3) {
                 this.order = order;
                 this.chain = {};
+                this.startStates = [];
+                this.punctuation = ['.', '!', '?'];
+            }
+
+            // Clean and tokenize text preserving punctuation
+            tokenize(text) {
+                // Preserve punctuation as separate tokens
+                return text
+                    .replace(/([.!?])/g, ' $1 ')
+                    .split(/\s+/)
+                    .filter(w => w.length > 0);
+            }
+
+            // Check if a word is a sentence start (capitalized)
+            isSentenceStart(word) {
+                return word.length > 0 && word[0] === word[0].toUpperCase();
             }
 
             train(text) {
-                const words = text.toLowerCase().split(/\s+/).filter(w => w.length > 0);
-                
-                for (let i = 0; i < words.length - this.order; i++) {
-                    const state = words.slice(i, i + this.order).join(' ');
-                    const next = words[i + this.order];
-                    
+                this.chain = {};
+                this.startStates = [];
+
+                const tokens = this.tokenize(text);
+
+                // Build chain
+                for (let i = 0; i < tokens.length - this.order; i++) {
+                    const state = tokens.slice(i, i + this.order).join(' ').toLowerCase();
+                    const next = tokens[i + this.order];
+
                     if (!this.chain[state]) {
                         this.chain[state] = [];
                     }
                     this.chain[state].push(next);
+
+                    // Track sentence starts for better initialization
+                    if (i === 0 || this.punctuation.includes(tokens[i - 1])) {
+                        this.startStates.push(state);
+                    }
                 }
+            }
+
+            // Get next word with fallback mechanism
+            getNext(currentState) {
+                let possibilities = this.chain[currentState];
+
+                // Fallback for higher orders: try lower order if no match
+                if (!possibilities || possibilities.length === 0) {
+                    const words = currentState.split(' ');
+
+                    // Try progressively shorter contexts
+                    for (let i = 1; i < words.length; i++) {
+                        const shorterState = words.slice(i).join(' ');
+                        possibilities = this.chain[shorterState];
+                        if (possibilities && possibilities.length > 0) {
+                            break;
+                        }
+                    }
+                }
+
+                if (!possibilities || possibilities.length === 0) {
+                    return null;
+                }
+
+                return possibilities[Math.floor(Math.random() * possibilities.length)];
             }
 
             generate(length = 50) {
                 const states = Object.keys(this.chain);
-                if (states.length === 0) return "Enter more text to generate significant variations.";
-                
-                let currentState = states[Math.floor(Math.random() * states.length)];
+                if (states.length === 0) {
+                    return "Please enter more text to generate variations. The algorithm needs at least a few complete sentences.";
+                }
+
+                // Start with a sentence-starting state if available
+                let currentState = this.startStates.length > 0
+                    ? this.startStates[Math.floor(Math.random() * this.startStates.length)]
+                    : states[Math.floor(Math.random() * states.length)];
+
                 let result = currentState.split(' ');
-                
+                let sentenceLength = result.length;
+
+                // Generate text
                 for (let i = 0; i < length - this.order; i++) {
-                    const possibilities = this.chain[currentState];
-                    if (!possibilities || possibilities.length === 0) break;
-                    
-                    const next = possibilities[Math.floor(Math.random() * possibilities.length)];
+                    const next = this.getNext(currentState);
+
+                    if (!next) {
+                        // Try to start a new sentence if stuck
+                        if (this.startStates.length > 0) {
+                            currentState = this.startStates[Math.floor(Math.random() * this.startStates.length)];
+                            continue;
+                        } else {
+                            break;
+                        }
+                    }
+
                     result.push(next);
-                    
+                    sentenceLength++;
+
+                    // End sentence naturally after punctuation if long enough
+                    if (this.punctuation.includes(next) && sentenceLength > 8 && Math.random() > 0.3) {
+                        break;
+                    }
+
+                    // Update state
                     const words = currentState.split(' ');
                     words.shift();
-                    words.push(next);
+                    words.push(next.toLowerCase());
                     currentState = words.join(' ');
                 }
-                
-                result[0] = result[0].charAt(0).toUpperCase() + result[0].slice(1);
-                return result.join(' ') + '.';
+
+                // Capitalize first letter
+                if (result.length > 0) {
+                    result[0] = result[0].charAt(0).toUpperCase() + result[0].slice(1);
+                }
+
+                // Ensure proper ending
+                const lastToken = result[result.length - 1];
+                if (!this.punctuation.includes(lastToken)) {
+                    result.push('.');
+                }
+
+                return result.join(' ').replace(/\s+([.!?,])/g, '$1');
             }
         }
 
@@ -2735,8 +2929,46 @@
         const generateMarkovBtn = document.getElementById('generateMarkovBtn');
         const autoMarkovBtn = document.getElementById('autoMarkovBtn');
         const markovStatus = document.getElementById('markovStatus');
+        const orderDescription = document.getElementById('orderDescription');
         let autoMarkovActive = false;
         let autoMarkovInterval;
+
+        // Order descriptions
+        const orderDescriptions = {
+            1: '<strong>Order 1 (Random):</strong> Looks at only 1 previous word. Creates chaotic, surreal text breaking grammatical rules. Perfect for experimental Dadaist poetry and maximum unpredictability.',
+            2: '<strong>Order 2 (Simple):</strong> Looks at 2 previous words. Creates simple sentences with basic grammar but frequent logic jumps. Ideal for fragmented dialogue and stream of consciousness.',
+            3: '<strong>Order 3 (Balanced):</strong> Analyzes sequences of 3 words. Creates text that maintains grammatical structure while introducing creative variations. Ideal for poetic and literary texts.',
+            4: '<strong>Order 4 (Coherent):</strong> Looks at 4 previous words. Creates highly coherent text, almost indistinguishable from the original. Best for long texts, novels, and essays. Requires more input text.'
+        };
+
+        // Handle order button clicks
+        document.querySelectorAll('.markov-order-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const newOrder = parseInt(btn.dataset.order);
+
+                // Update active button
+                document.querySelectorAll('.markov-order-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update markov order
+                markov.order = newOrder;
+
+                // Update description
+                if (orderDescription) {
+                    orderDescription.innerHTML = orderDescriptions[newOrder];
+                }
+
+                // Re-train if there's text
+                if (markovInput.value.trim().length > 0) {
+                    markov.train(markovInput.value);
+                }
+
+                markovStatus.textContent = `Order ${newOrder} selected`;
+                setTimeout(() => {
+                    markovStatus.textContent = 'Ready';
+                }, 1500);
+            });
+        });
 
         if (generateMarkovBtn) {
             generateMarkovBtn.addEventListener('click', () => {
