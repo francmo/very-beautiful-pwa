@@ -14,7 +14,10 @@
         gtag('config', 'G-GCCSPG1H28');
     </script>
     <!-- End Google Analytics -->
-    
+
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
     <!-- PWA Configuration -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff6b6b">
@@ -1177,11 +1180,12 @@
                 <button class="nav-btn active" data-section="home">Home</button>
                 <button class="nav-btn" data-section="opera">The Work</button>
                 <button class="nav-btn" data-section="audio">Audio</button>
-                <button class="nav-btn" data-section="airpiece">Air Piece PDF</button>
                 <button class="nav-btn" data-section="media">Media</button>
                 <button class="nav-btn" data-section="lab">Laboratory</button>
                 <button class="nav-btn" data-section="docs">Documentation</button>
                 <button class="nav-btn" data-section="tech">Technical</button>
+                <button class="nav-btn" data-section="airpiece">🇮🇹 Air Piece</button>
+                <button class="nav-btn" data-section="airpiece-en">🇬🇧 Air Piece</button>
             </div>
         </div>
         
@@ -1318,43 +1322,6 @@
                 </div>
             </div>
 
-            <!-- Air Piece Section -->
-            <div class="card">
-                <h2>🌊 Air Piece (1970)</h2>
-                <h3>From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre</h3>
-                
-                <p>
-                    Air Piece represents a pioneering work by John Heineman that transforms the soundscape of Rome's Fiumicino airport into a visionary electroacoustic composition. The work anticipates methodologies that would become central to contemporary data art.
-                </p>
-
-                <h3>Tripartite Structure</h3>
-                <div class="info-grid">
-                    <div class="info-box">
-                        <strong>Section A (0'00"-3'12")</strong>
-                        <p>Ethnomusicological documentation: direct recording of the soundscape with engines, turbines, announcements, and conversations.</p>
-                    </div>
-                    <div class="info-box">
-                        <strong>Section B (3'12"-8'30")</strong>
-                        <p>Analog algorithmic processing: electroacoustic elaboration through loops, delay, filtering, and creation of "psychedelic vortices".</p>
-                    </div>
-                    <div class="info-box">
-                        <strong>Section C (8'30"-13'08")</strong>
-                        <p>Synthesis and meta-commentary: predominance of the Synket with Brechtian device of direct composer intervention.</p>
-                    </div>
-                </div>
-
-                <h3>Technological Innovation</h3>
-                <p>
-                    Use of the <strong>Synket</strong> (analog synthesizer developed by Paul Ketoff at Cinecittà), one of the first systematic integrations between musique concrète and electronic synthesis. The final estrangement device anticipates media art practices that would become canonical in the digital era.
-                </p>
-
-                <h3>Scientific Publication</h3>
-                <p>
-                    <strong>Musicological essay:</strong> "Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"<br>
-                    <strong>ISBN:</strong> 9780244560393 (2020)<br>
-                    <strong>Recognition:</strong> Fondazione Isabella Scelsi, Rome - John Heineman Archive (Fondo 7)
-                </p>
-            </div>
         </section>
 
         <!-- AUDIO SECTION -->
@@ -1414,6 +1381,8 @@
                     <!-- Canvas Spettrogramma -->
                     <div class="spectrogram" id="spectrogramContainer">
                         <canvas id="spectrogramCanvas"></canvas>
+                        <!-- Tooltip interattivo -->
+                        <div id="spectrogramTooltip" style="position: absolute; display: none; background: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-family: monospace; pointer-events: none; z-index: 1000; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></div>
                     </div>
 
                     <!-- Etichette Tempo (asse X) -->
@@ -1503,48 +1472,815 @@
             </div>
         </section>
 
-        <!-- AIR PIECE PDF SECTION -->
+        <!-- AIR PIECE ESSAY SECTION -->
         <section id="airpiece" class="section">
             <div class="card">
-                <h2>📄 Air Piece - Complete Document</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 2rem;">
-                    Here you can read the complete musicological essay <strong>"Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"</strong> 
-                    by Francesco Mariano (ISBN 9780244560393, 2020). The document includes in-depth spectral analysis, historical contextualization, and technical documentation of John Heineman's 1970 work.
+                <h1 style="text-align: center; font-size: 2rem; margin-bottom: 3rem; color: var(--accent-purple);">
+                    Air Piece. Dall'ecoacustica del paesaggio sonoro alla Fantasia Sonora di Teatro Musicale
+                </h1>
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem;">di Francesco Mariano</p>
+
+                <!-- Introduzione -->
+                <div style="background: rgba(72, 219, 251, 0.1); padding: 2rem; border-radius: 10px; border-left: 4px solid #48dbfb; margin-bottom: 3rem;">
+                    <p>
+                        Air Piece rappresenta un'opera pionieristica di John Heineman che trasforma il paesaggio sonoro dell'aeroporto di Fiumicino di Roma in una visionaria composizione elettroacustica. L'opera anticipa metodologie che sarebbero diventate centrali nell'arte dei dati contemporanea.
+                    </p>
+
+                    <h3>Struttura Tripartita</h3>
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <strong>Sezione A (0'00"-3'12")</strong>
+                            <p>Documentazione etnomusicologica: registrazione diretta del paesaggio sonoro con motori, turbine, annunci e conversazioni.</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>Sezione B (3'12"-8'30")</strong>
+                            <p>Elaborazione algoritmica analogica: elaborazione elettroacustica attraverso loop, delay, filtraggio e creazione di "vortici psichedelici".</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>Sezione C (8'30"-13'08")</strong>
+                            <p>Sintesi e meta-commento: predominanza del Synket con dispositivo brechtiano di intervento diretto del compositore.</p>
+                        </div>
+                    </div>
+
+                    <h3>Innovazione Tecnologica</h3>
+                    <p>
+                        Utilizzo del <strong>Synket</strong> (sintetizzatore analogico sviluppato da Paul Ketoff a Cinecittà), una delle prime integrazioni sistematiche tra musica concreta e sintesi elettronica. Il dispositivo finale di straniamento anticipa pratiche di media art che sarebbero diventate canoniche nell'era digitale.
+                    </p>
+
+                    <h3>Pubblicazione Scientifica</h3>
+                    <p>
+                        <strong>Saggio musicologico:</strong> "Air Piece: Dall'ecoacustica del paesaggio sonoro alla Fantasia Sonora di Teatro Musicale"<br>
+                        <strong>ISBN:</strong> 9780244560393 (2020)<br>
+                        <strong>Riconoscimento:</strong> Fondazione Isabella Scelsi, Roma - Archivio John Heineman (Fondo 7)
+                    </p>
+                </div>
+
+                <!-- Table of Contents -->
+                <h2 id="indice">Indice</h2>
+                <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                    <li><a href="#biografia" style="color: var(--accent-blue);">- Biografia di John Heineman</a> <span style="float: right;">pag. 3</span></li>
+                    <li><a href="#panoramica" style="color: var(--accent-blue);">- Breve panoramica sulla nascita della soundscape composition</a> <span style="float: right;">pag. 4</span></li>
+                    <li><a href="#fantasia" style="color: var(--accent-blue);">- Dalla soundscape composition alla fantasia sonora di teatro musicale</a></li>
+                    <li><a href="#analisi" style="color: var(--accent-blue);">- Analisi di Air Piece di John Heineman</a> <span style="float: right;">pag. 7</span></li>
+                </ul>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- Biografia -->
+                <h2 id="biografia">Biografia di John Heineman</h2>
+                <p>John Heineman (New York 1939) inizia lo studio del trombone presso il Mannes College of Music contemporaneamente allo studio della composizione, che continuerà a Roma perfezionandosi con Goffredo Petrassi. Si diploma alla Columbia University. Nel 1966 termina il corso presso l'Accademia Santa Cecilia, presentando la sua composizione orchestrale "Consequents" che viene eseguita dall'orchestra dell'Accademia di Santa Cecilia.</p>
+
+                <p>E' stato anche allievo di Elias Tanenbaum, Peter Stearns e Boris Porena. "L'apprendistato con Tanenbaum ha travalicato però, per Heineman, i confini dello studio strumentale: allievo di Bohuslav Martinu, Tanenbaum era aggiornato sull'intero fronte dell'avanguardia storica europea (Bartók, Webern...) e sulle tendenze più recenti del jazz (Parker)," [Alessandro Mastropietro]</p>
+
+                <p>Già durante i primi anni di studio presso il Mannes College of Music è affascinato dall'improvvisazione e spesso durante i weekend invitava amici musicisti, Alex Hershenson (tromba) ed Andy Pagano (clarinetto), al college per sessioni di improvvisazioni ricercando particolari atmosfere. Assiste personalmente a concerti di Charlie Parker, Clifford Brown durante la registrazione di "A Night at Birdland Vol. 1", John Coltrane con Thelonius Monk rimanendo fin dall'adolescenza affascinato dall'improvvisazione.</p>
+
+                <p>È tra i fondatori del Gruppo di Improvvisazione Nuova Consonanza col quale svolse attività concertistica fra il 1965 e il 1970 esibendosi in varie città europee incluso un concerto per elettronica ed improvvisazione al 31° Festival di Venezia della musica Contemporanea nel settembre del 1968. Col Gruppo di Improvvisazione Nuova Consonanza registrò diversi LP (trombone e violoncello), ricordiamo Avant Garde vol. II, Gruppe Il Gruppo, The private Sea of Dreams.</p>
+
+                <p>Ha collaborato con il teatro inter-disciplinario Gruppo Altro. È autore, fra gli altri,di due lavori concettuali, Air Piece (1970) e Very, Very Beautiful (1973), che sono considerati emblematici nel loro genere. Dopo aver vissuto a Berlino, in Canada ed a New York, dal 1982 Heineman risiede stabilmente in Italia. Dopo una pausa di alcuni anni dalla musica si è riavvicinato suonando in prima persona prima il flicorno e poi il sax contralto.</p>
+
+                <p>Air Piece venne eseguito a Roma il 15 febbraio 1970, al Berliner Festwochen nel 1973 ed al Manhattan School of Music di New York nel 1974. Sempre nel 1974 viene presentata Very, Very Beautiful, un'opera di John Heineman del 1974 che utilizza simili processi compositivi. Venne eseguito a Roma fra il 29 ed il 31 marzo 1974 in collaborazione con TEAM Roma al Beat 72.</p>
+
+                <p>Tra i vari riconoscimenti, ha ricevuto il Composers Award dalla Broadcast Music Inc. (1965) e un Rome Prize Fellowship presso l'American Academy (1967-69).</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- Panoramica -->
+                <h2 id="panoramica">Breve panoramica sulla nascita del Paesaggio Sonoro</h2>
+
+                <p>Raymond Murray Schafer definì il soundscape come l'ambiente sonoro che ci circonda e nel quale viviamo così come viene percepito dalle persone che ne sono immerse. Potremmo definire anche il paesaggio sonoro come la colonna sonora della nostra vita, comprendendo nel paesaggio sonoro tutti i suoni che accompagnano la nostra esistenza, da quelli che intercettiamo involontariamente nelle attività quotidiane a quelli ai quali prestiamo maggiore attenzione come un concerto in un teatro.</p>
+
+                <p>Il suono può assumere differenti connotazioni: suono come fenomeno fisico oggettivo e suono come sensazione uditiva. Tra gli organi sensoriali individuiamo nell'udito una doppia natura, udire come fenomeno fisiologico e ascoltare come atto intellettivo psicologico. La capacità di ascoltare è un atto intenzionale e può essere sviluppata. L'ascolto viene mediato dai presupposti storico-socio-culturali dell'individuo nel contesto in cui vive.</p>
+
+                <p>Il paesaggio sonoro è in veloce e continuo mutamento, i suoni si moltiplicano e spesso si standardizzano andando ad annullare caratteristiche tipiche di determinati paesaggi sonori. Possiamo parlare di un effetto di globalizzazione sonora. Aerei, automobili, impianti industriali contribuiscono a compromettere sia il benessere psicofisico dell'uomo che ad annientare le unicità dei luoghi. Presenza invadente di suoni per lo più a basse frequenze e di forte intensità rende sempre più omogeneo il paesaggio sonoro di diversi luoghi, andando ad annullare identità sonore territoriali.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- Dalla soundscape alla fantasia -->
+                <h2 id="fantasia">Dalla soundscape composition alla fantasia sonora di teatro musicale</h2>
+
+                <p>Air Piece è una fantasia sonora di teatro musicale con una trama e un proprio sviluppo. Gli eventi sonori che si susseguono andranno a creare episodi di movimento alternati a fasi più tranquille, scene concitate e violente, vortici, momenti più statici, e repentini cambi di scena.</p>
+
+                <p>Possiamo certamente collocare Air Piece nella soundscape composition essendo al tempo stesso una delle prime composizioni di questo genere ed una sua evoluzione anticipandone certi sviluppi. Come ben definito da Murray Shafer, la composizione del paesaggio sonoro esplora ed interpreta il suono degli ambienti.</p>
+
+                <p>In Air Piece l'ambiente sonoro ripreso è fuori dubbio parte di un paesaggio sonoro già rapidamente mutato ed in continua evoluzione. Ci troviamo immersi in un'ambiente sonoro completamente trasfigurato, ci spostiamo all'interno di questo ambiente cogliendone le caratteristiche da differenti punti di ascolto.</p>
+
+                <p>Esposizioni nitide e schiette, riprese sonore immacolate, vere e crude, che si trasformano in sognanti vortici con richiami psichedelici grazie alle tecniche compositive messe in opera dall'Autore. Air Piece induce anche l'ascoltatore a mettere in relazione il paesaggio sonoro presente, quello raccontato e sceneggiato, a quello che non è più, a quello da immaginarsi prima della trasfigurazione sonora che l'ambiente ha subito.</p>
+
+                <p>Possiamo soltanto immaginare come dovessero suonare i luoghi descritti in Air Piece soltanto un decennio prima delle registrazioni (l'aeroporto di Fiumicino fu costruito fra il 1958 ed il 1960). Immaginare i suoni non è facile, e ci vorrebbero studi dedicati e approfonditi sulle capacità delle persone di immaginare suoni e saperli descrivere. Ancor più difficile è immaginare suoni che non si conoscono, anche presumendo (da fonti fotografiche, video o racconti scritti e orali) le sorgenti sonore presenti in un luogo, potremmo provare ad immaginare i suoni ma la mancanza di materiale sonoro certo resta una grossa carenza.</p>
+
+                <p>Quest'analisi di Air Piece evidenzia sia gli aspetti fisici acustici che la capacità di John Heineman di aver creato da questi eventi sonori un'Opera che è sia un documento sonoro che stimola ricerche ecosonologiche che un brano musicale che si evolve dalla rigidità della pura documentazione verso la creazione di una fantasia sonora di teatro musicale.</p>
+
+                <p>Come emergerà dettagliatamente dall'analisi che segue, sono presenti tre sezioni principali all'interno del brano che, richiamando un linguaggio teatrale possiamo riconoscere come scene.</p>
+
+                <p><strong>La prima scena</strong> è in puro stile soundscape composition, con le riprese effettuate nell'arco di alcuni giorni all'interno e nei dintorni della pista dell'aeroporto di Fiumicino. Altre registrazioni vennero effettuate presso l'American Academy di Roma: la voce del bambino che pronuncia "de dah…", la voce di un pilota interpretata dall'artista visuale Jerry Kearns, la voce della prima moglie Lydia Heineman fino alla voce finale dello stesso Heineman. Queste registrazioni sono frutto delle riprese effettuate a partire dalla primavera del 1969 seguite da centinaia di ore di ascolto ed editing in studio.</p>
+
+                <p><strong>Nella seconda scena</strong> il paesaggio sonoro viene elaborato attraverso filtraggi, loop e delay. In quegli anni l'influenza delle correnti sperimentali e psichedeliche era molto forte, questa seconda scena ci trasporta in un "psychedelic trip" con le voci dei piloti in vortici di loop, effetti e distorsioni. Ricordiamo che proprio nel 1970, Timothy Leary, scrittore, psicologo e artista statunitense, promotore dell'uso di sostanze psichedeliche, evade dal carcere per fuggire prima ad Algeri poi in Svizzera. La sua risonanza arrivava forte anche a Roma. Per approfondimenti su Timothy Leary si rimanda comunque ad altre fonti. Le registrazioni di questa sezione B provengono da una grande mole di nastri in archivi riservati ai quali Heineman aveva avuto accesso.</p>
+
+                <p><strong>La terza scena</strong> è in prevalenza elettronica con un intermezzo di voci in loop e suoni di aerei. In questa ultima sezione è stato utilizzato un sintetizzatore analogico valvolare Synket ('Synthesiser-Ketoff') progettato da Paul Ketoff, ingegnere del suono per RCA e attivo a Roma presso Cinecittà Film Studios. Il Synket era di produzione artigianale e praticamente ogni modello commercializzato era un prototipo in quanto in continua evoluzione fra il 1965 ed il 1976.</p>
+
+                <h3>L'interdisciplinarità di Air Piece</h3>
+
+                <p>L'interdisciplinarità di Air Piece ci porta ad evidenziare anche i seguenti binomi che caratterizzano rapporti nel brano:</p>
+                <ul>
+                    <li>uomo - ambiente</li>
+                    <li>uomo - velocità (tecnologia)</li>
+                    <li>velocità (tecnologia) - ambiente</li>
+                    <li>ambiente - musica</li>
+                    <li>musica - tecnologia</li>
+                </ul>
+
+                <p>Una netta distinzione suoni concreti-suoni elettronici contrappone le prime scene, esclusivamente composte da riprese ambientali, alla terza quasi esclusivamente elettronica.</p>
+
+                <p>Interessante anche seguire come lo sviluppo della voce umana attraverso le diverse scene faccia emergere il rapporto fra l'uomo e questi cambiamenti, evidenziando come sia l'uomo stesso vittima e causa di una trasformazione sonora. La voce umana è presente nelle diverse scene assumendo aspetti e significati differenti.</p>
+
+                <p>Nella prima scena l'uomo è immerso nella densa grana sonora uniforme, contribuisce a crearla quasi inconsapevolmente, ne è vittima. Nella seconda troviamo una evoluzione verso velocità supersoniche con l'uomo consapevolmente protagonista. Nella terza scena, come i titoli di coda del cinema, troviamo la voce rassicurante dell'Autore che chiude la fantasia di teatro sonoro mentre cala il sipario.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- ANALISI DETTAGLIATA -->
+                <h2 id="analisi">Analisi di Air Piece</h2>
+
+                <p>Air Piece è un brano composto da John Heineman nel 1970 effettuando riprese sonore nell'aeroporto di Fiumicino e nei suoi dintorni ed ha una durata di 13'08". Presso lo Studio di Musica Elettronica "G. Rossini" di Pesaro ne è stata fatta una versione Stereofonica dalle originarie registrazioni su quattro tracce, completando le riprese effettuate a Fiumicino con registrazioni di archivio (voci di piloti, torre di controllo e Frecce Tricolori) e l'utilizzo di elettronica.</p>
+
+                <p>Per effettuare l'analisi del brano sono state individuate tre macrosezioni che chiameremo A, B, C. In ogni sezione saranno evidenziate delle sottosezioni (a1,a2,a3,…b1,…). Queste ripartizioni sono state determinate per coerenza di eventi timbrici, evidenziando nel tempo la presenza delle varie differenti sorgenti sonore, individuando gli assemblaggi eseguiti in fase di montatura-composizione, nonché suddivisioni di carattere più soggettivo e suggestivo, riferendo sempre dei chiari parametri evidenziati dalle immagini dello spettrogramma.</p>
+
+                <div class="info-grid" style="margin: 2rem 0;">
+                    <div class="info-box">
+                        <strong>Sez. A 0'0" - 3'12"</strong>
+                        <p>Esposizione dell'ambiente sonoro. Aeroporto di Fiumicino.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Sez. B 3'12" - 8'30"</strong>
+                        <p>Aerei. Decolli, atterraggi. Piloti, Frecce Tricolori, bang sonico.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Sez. C 8'30" - 13'08"</strong>
+                        <p>Elettronica, voce dell'autore.</p>
+                    </div>
+                </div>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SEZIONE A -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SEZIONE A - Esposizione dell'ambiente sonoro</h3>
+
+                <p><em>Toniche: motori, turbine, folla all'interno di un aeroporto</em><br>
+                <em>Segnali: voce di speaker, pilota</em></p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page8_0.png" alt="Spettrogramma - Panoramica Sezione A" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Vista panoramica della Sezione A - Paesaggio sonoro dell'aeroporto di Fiumicino</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page8_1.png" alt="Spettrogramma - Dettaglio Sezione A" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Dettaglio spettrale - Toniche di motori e turbine con segnali di voci</p>
+                </div>
+
+                <h4>a1) Terminal Fiumicino - Time 0.00</h4>
+                <p>Il brano inizia con un forte motore di automobile, molto ravvicinato e presente. E' in fase di rapido decadimento e lascia subito spazio all'ambiente circostante. La voce di uno speaker diffusa da altoparlanti diviene più nitida, si evince la pronuncia francese anche se non si riesce ad intenderne il significato. Ci troviamo quindi nell'area dell' aeroporto di Fiumicino il cui paesaggio sonoro, insieme all'ambiente circostante, verrà descritto nella prima parte del brano.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page9_0.png" alt="Spettrogramma - Motore iniziale molto intenso" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Il motore iniziale molto intenso - Frequenze fra 43 e 250 Hz con valori fino a -12dB</p>
+                </div>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-blue); margin: 1rem 0;">
+                <strong>Nota tecnica:</strong> Il motore iniziale molto intenso mostra frequenze fra 43 e 250 Hz con valori fino a -12dB che decadono rapidamente.
                 </p>
 
-                <div style="background: rgba(255, 107, 107, 0.1); border: 2px solid rgba(255, 107, 107, 0.3); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-                        <h3 style="color: var(--accent-yellow); margin-bottom: 1rem;">Air Piece Essay (PDF)</h3>
-                        <p style="margin-bottom: 2rem; color: var(--text-secondary);">
-                            Complete musicological analysis with spectrographs, frequency analysis, and historical documentation.
-                        </p>
-                        
-                        <button class="btn" onclick="window.open('documents/Air_Piece_Essay.pdf', '_blank')">
-                            📖 Open Air Piece PDF
-                        </button>
+                <p><strong>Time 5,845:</strong> Il motore dell'automobile decresce rapidamente e nel medesimo evento sonoro percepiamo delle turbine in lontananza con suoni acuti che procedono in un glissando ascendente fino a 3600Hz con intensità deboli ma comunque ben percettibili (-31 dB).</p>
+
+                <h4>a2) Annunci - Time 12.00</h4>
+                <p>Termina il glissando delle turbine e si apre uno spettro più ricco in estensione di frequenza. Ci troviamo all'interno dell'aeroporto e la voce di uno speaker risente chiaramente degli effetti del riverbero tipici di grandi spazi chiusi. A 17,250 riconosciamo una voce, con un accenno ritmico-melodico, ripetuta con un delay di 500 ms (inizia a 17,250 sul canale sx per ripetersi a 17,7500 sul canale dx).</p>
+
+                <p><strong>Time 23.700 - 33.100:</strong> Tre squilli di telefono si susseguono producendo una serie di parziali superiori ben distinguibili dallo spettrogramma. I primi due sul canale sinistro, il terzo, mascherato, anche sul destro. Il rumore di fondo maschera le parziali sotto i 3700 Hz.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page10_0.png" alt="Spettrogramma - Squilli di telefono" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Squilli di telefono sul canale sinistro - Il rumore di fondo maschera le parziali sotto i 3700 Hz</p>
+                </div>
+
+                <h4>a3) Annunci partenze - Time 33,100 - 1'36" (Solo dal canale destro)</h4>
+
+                <p><em>Voce dello speaker:</em><br>
+                "Karachi, Calcutta, Bangkok, Hong Kong e Tokio. Verrà chiamato tre 5 minuti all'uscita numero cinque".<br><br>
+                Dal sottofondo una turbina di un motore intorno ai 3000Hz, definiamo queste turbine come delle toniche che ritroveremo sovente nel corso del brano.</p>
+
+                <p>Intanto continua la voce dello speaker:<br>
+                46" May i have your attention please",<br>
+                49" Jal, Japan Airline inform that flight number 452<br>
+                53" to Cairo, Karachi...</p>
+
+                <p>...sentiamo, in primo piano e ravvicinata, la voce di un bambino, quasi a intonare un frammento di melodia. <strong>"Dee dah, dee dah, de dah…de dah…de d…"</strong>. E' completamente inaspettata dagli eventi che si sono fino ad ora susseguiti, e crea un forte distacco dal paesaggio sonoro che si va delineando. E' in primo piano e il suo distacco ci porta lontanissimo.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page11_0.png" alt="Spettrogramma - Voce del bambino" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Segnali - La voce del bambino (time 56.700) con le armoniche superiori in chiara evidenza</p>
+                </div>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-blue); margin: 1rem 0;">
+                <strong>Segnali:</strong> La voce del bambino (time 56.700) con le armoniche superiori in chiara evidenza.
+                </p>
+
+                <p>Nuovi segnali si susseguono: gli annunci continuano con la voce di un altro speaker fino a lasciar spazio a turbine e motori che da toniche diventano soliste in un crescendo che si sviluppa fra 1'06" e 1'36".</p>
+
+                <h4>a4) Turbine e motori a reazione - Time 1'36" - 2'09"</h4>
+                <p>Rapido crescendo di turbine e motori a banda larga chiude la sezione A con le toniche sul fondo sempre presenti. L'accensione di un motore avvia un nuovo glissando di turbine che salgono rapidamente di frequenza e intensità terminando improvvisamente con un taglio netto. Il glissando ascendente di turbine e motori, prima di tipo esponenziale poi di tipo logaritmico, con un incremento di intensità che arriva ai -7 dB.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page12_0.png" alt="Spettrogramma - Glissando turbine e motori" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Il glissando ascendente di turbine e motori con incremento di intensità fino a -7 dB</p>
+                </div>
+
+                <h4>a5) Aerei in volo. Tranquillo. - Time 2'09" - 2'30"</h4>
+                <p>Una caduta nel vuoto arriva al termine del lungo crescendo precedente. Restano improvvisamente soltanto i motori, che adesso, con andamento costante, ci sembrano tranquilli e silenziosi. Un breve momento di tranquillità con le sole toniche fino alla comparsa di nuovi segnali. La fase più tranquilla con la tonica dei motori sempre presenti. Un suono molto cupo e stabile con un centro banda intorno ai 170 Hz e un'intensità di -19 dB.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page12_1.png" alt="Spettrogramma - Fase tranquilla" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">La fase più tranquilla - Suono cupo e stabile con centro banda a 170 Hz e intensità di -19 dB</p>
+                </div>
+
+                <h4>a6) Jerry Kearns voce del pilota - Time 2.30 - 3'12"</h4>
+
+                <p>2'32" Messaggio di benvenuto del pilota: <em>"good evening ladies and gentlemen this is your pilot speaking, i trust that your departure from L.A. was a comfortable one"</em>. Nel sottofondo la tonica, motore di aereo in volo, con andamento costante.</p>
+
+                <p>2'38" Comunicazioni radio del pilota: <em>"Ah, we're looking forward to a very pleasant flight tonight, as we check the weather, we see no foreseeable problems as far as turbulence goes"</em></p>
+
+                <p>2'48" <em>"Our flight to Albuquerque should take approximately an hour and a half, to an hour and thirty-five minutes"</em></p>
+
+                <p>2'55" <em>"Ah, we hope you can settle in and relax and enjoy the trip. Please undo your seat belts."</em></p>
+
+                <p>3'01" <em>"I will cut back in later if any interesting sites - ah pass by - ah below us as we continue our journey".</em></p>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-purple); margin: 1rem 0;">
+                Jerry Kearns, artista visuale ed amico di John Heineman registrò questi dialoghi presso l'American Academy. "Kearns spontaneously was able to imitate a typical American mid-western accent (perfect for the piot's intervention on board a plane that I was looking for)" email di Heineman. "That recording helped to shape the direction of the piece, triggering the idea of psychedelic effects - of variable speed, break-up of his speech (use of filters etc.) suggesting various contrapuntal voice-over techniques (the settle-in and relax and enjoy the trip - triggering psychedelic effects idea - the comic-like effect of his voice slowed down to mimic an inebriated pilot)."
+                </p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SEZIONE B -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SEZIONE B - In volo. Piloti, torre di controllo, acrobazie, bang sonico</h3>
+
+                <p><em>Toniche: motori, turbine, automobili</em><br>
+                <em>Segnali: voci piloti in volo, voci da torre di controllo, voci in loop, bang sonico</em></p>
+
+                <p>Questa sezione è un viaggio onirico dell'uomo in un caleidoscopio di velocità. Le voci dei piloti in volo che si rincorrono in vorticosi canoni lasceranno a poco a poco spazio alle turbine ed ai motori a reazione alternando eventi sonori di quiete ad eventi molto concitati e violenti come i bang della rottura della barriera del suono. Siamo in balia degli eventi che si susseguono, fasi di riposo si alternano a sogni psichedelici che trasportano l'ascoltatore oltre il solito.</p>
+
+                <h4>b1) Time 3'12" - 3'18"</h4>
+                <p>Nuovo breve momento di tranquillità con le sole toniche di motori in volo.</p>
+
+                <h4>b2) Segnali. Imitazione a 4 voci - Time 3'18" - 3'39</h4>
+                <p>Voci di piloti in loop creano dei vortici in crescendo. Sopra al costante sottofondo dei motori degli aerei, le voci si muovono velocemente creando un movimento vorticoso, un richiamo psichedelico in contrasto con la stabilità dei motori degli aerei in volo.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page15_0.png" alt="Spettrogramma - Voci in loop" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Voci di piloti in loop con motori in volo - Vortici vorticosi psichedelici</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page15_1.png" alt="Spettrogramma - Dettaglio voci" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Eventi alternati di toniche e voci - Segnali a banda stretta in glissandi discendenti</p>
+                </div>
+
+                <h4>b3-b6) Time 3'39" - 4'23"</h4>
+                <p>Si alternano eventi di sole toniche (motori in volo) e riprese delle voci di piloti in loop. L'ultimo episodio di questa alternanza culmina con: <em>"……Settle in and relax and enjoy the trip"</em>. Si notano dallo spettrogramma dei chiari segnali a banda stretta che si muovono in glissandi discendenti (da 4800Hz a 4350Hz).</p>
+
+                <h4>b7) Time 4'23" - 4'33"</h4>
+                <p>Toniche di motori in volo molto intense alle basse frequenze.</p>
+
+                <h4>b8) Alfabeto militare - Time 4'33 - 5'24"</h4>
+
+                <p><em>"Roger fox baker baker dog Quinn, you are clear to descend to two thousand feet…and check your finny fox fox one zero one seven point two".</em></p>
+
+                <p>Si susseguono comunicazioni fra piloti e torre di controllo in alfabeto militare. <em>"Give us a call when 3 miles out, over.ah c"</em><br>
+                Seconda voce: <em>"…Roger, Fox, Baker, Baker Dog Quinn…"</em></p>
+
+                <p>Si distinguono i segnali della voce dei piloti, che si ripetono in loop e si sovrappongono in canone, con il caratteristico fruscio di fondo a banda larga delle comunicazioni radio.</p>
+
+                <p>5'10" <em>"Check your Finny FOX FOX 1017.2"</em><br>
+                <em>"Give us a call when 3 miles out, over".</em></p>
+
+                <p>Al 5'12" una tonica molto intensa mentre continuano le comunicazioni fra piloti e torre di controllo.</p>
+
+                <h4>b9) turbine, motori a reazione - Time 5'24" - 5'46"</h4>
+                <p>Forti segnali a banda stretta, in molteplici glissandi discendenti. Segnali di turbine con le toniche dei motori molto intense (-7 dB)</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page18_0.png" alt="Spettrogramma - Turbine e motori a reazione" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Turbine e motori a reazione - Glissandi discendenti con intensità di -7 dB</p>
+                </div>
+
+                <h4>b10) Esibizione delle frecce tricolori dell'Aeronautica Militare - Time 5'46" 6'04"</h4>
+
+                <p>Uno speaker comunica da altoparlanti in luogo aperto: <em>"E' già sul campo la pattuglia italiana"… "…sta per eseguire una virata di tipo Schneider…si portano nuovamente sul campo per eseguire una virata tipo Schneider".</em></p>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-yellow); margin: 1rem 0;">
+                La virata di tipo Schneider è una particolare manovra effettuata da un passaggio del così detto "solista", imprime all'aeroplano un movimento ondulatorio. La manovra viene generalmente effettuata in configurazione di atterraggio ed a velocità prossime a quelle dello stallo. Nella formazione ogni velivolo ha un ruolo ben preciso, che ogni pilota osserverà per la sicurezza e la riuscita dell'evoluzione. (Da notare le analogie fra la terminologia in uso nelle acrobazie aeree e quella musicale. La formazione, il solista, looping, bang sonico, formazione a cardioide).
+                </p>
+
+                <p>I rapidissimi passaggi degli aerei creano degli spettri a banda larga che crescono e decrescono rapidamente. Dallo spettrogramma possiamo chiaramente identificare tre passaggi fra 5'55" e 6'04.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page19_0.png" alt="Spettrogramma - Frecce Tricolori" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Manovre aeree delle Frecce Tricolori - Spettri a banda larga con tre passaggi identificabili</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page19_1.png" alt="Spettrogramma - Virata Schneider" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Virata di tipo Schneider - Crescendo e decrescendo rapidi dei passaggi aerei</p>
+                </div>
+
+                <h4>b11) Bang sonico - Time 6'04" - 6'11"</h4>
+                <p><em>"Attenzione, fra poco udremo il bang che si verifica quando avviene il superamento della barriera sonica"</em>. Invece che il bang sonico sentiamo però un boato non troppo intenso e di breve durata.</p>
+
+                <h4>b12) Piloti torre di controllo - Time 6'12" - 6'35"</h4>
+
+                <p>Motori in volo, dialoghi fra torre di controllo e piloti che si sovrappongono:</p>
+                <p><em>"..i'll be over in about, ah, 3 minutes, 4 minutes, over"<br>
+                "…Able Dog Charlie, Roger, we are standing by waiting your call when reaching Cittavecchia, over"<br>
+                "ah, my position is ? ah' ventuno decon, over"<br>
+                "Roma approach 119.1, over"<br>
+                "Request your altitude, also, over"<br>
+                "Altitude 4,500 feet"<br>
+                "ah, Fox, Baker, baker, dog"</em></p>
+
+                <h4>b13) Time 6'35" - 7'02"</h4>
+
+                <p><em>"Hanno compiuto il primo looping"</em> - voce di un cronista che commenta le manovre aeree delle frecce tricolori e annuncio di un nuovo bang sonico molto forte in una banda fra 40Hz e 180Hz con intensità fino a -6 dB.</p>
+
+                <p><em>"…jet 84F effetteranno la superamento della barriera del suono"<br>
+                "… e fra poco udremo il bang…secondo bang".</em></p>
+
+                <p>Questa fase violenta si chiude col suono di turbine che ci passano vicino velocemente creando brevi glissando discendenti di forte intensità.</p>
+
+                <h4>b14) Time 7'02" - 7'46"</h4>
+                <p>Si apre una scena coi soli motori protagonisti. Si tratta di motori di diverso tipo, e rotori di elicotteri. Come si nota chiaramente dallo spettrogramma, il suono dell'elica è descritto da fitte linee verticali a banda larga. Alle basse frequenze sempre le toniche dei motori molto intense.</p>
+
+                <h4>b15) Time 7'46" - 8'29"</h4>
+
+                <p>Si alternano momenti di distensione a episodi con motori di diversi tipo, ma non più aerei supersonici. A 8'03" una voce di donna che ride sul solo canale sinistro e si sviluppa in una risata frammentata, isterica e compulsiva che, mixata ai motori, si evolve in un frammento melodico chiudendo la lunga sezione B.</p>
+
+                <p>La voce sul canale sinistro che chiude la sezione B con un frammento ritmico melodico ripetuto: <strong>"Keep singin' keep singin'"</strong>. Si tratta della voce di Candy Wechsler che ci porta in una fase transitoria proiettandoci, dall'oscura e minacciosa scena che si sta concludendo, alla lucente scena finale.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SEZIONE C -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SEZIONE C - Elettronica e voce dell'autore</h3>
+
+                <p>Nella terza scena suoni elettronici lineari, definiti e costanti si contrappongono allo scenario visto nelle prime due scene. Qui sono brevi loop di voci residui della scena precedente in una sorta di breve ostinato. Dopo il lungo viaggio è un ritorno alla realtà. Ritorno che prende forma inizialmente con suoni quasi puri per poi evolversi in spettri più complessi, accompagnato dalla voce dell'autore che ringrazia e accompagna la chiusura del sipario. Un atterraggio su territori più convenzionali. La dimensione che si crea nell'ultima scena ci riaccompagna alla realtà.</p>
+
+                <h4>c1) Synket - Time 8'30" - 10'44"</h4>
+
+                <p>I suoni del Synket aprono lo scenario unendosi al loop della voce che ripete <em>"Keep singin' keep singin'"</em>. Al time 8'53" termina il loop della voce ed anche sul canale destro iniziano i suoni del Sintetizzatore. Una trama sempre più densa di suoni crea linee melodiche e battimenti, intermittenze, accordi e grumi che si evolvono e si intersecano.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page21_0.png" alt="Spettrogramma - Synket" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Ingresso del Synket - Suoni elettronici lineari e costanti</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page21_1.png" alt="Spettrogramma - Loop voci" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Loop della voce "Keep singin'" con sintesi elettronica - Trama densa di suoni</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page22_0.png" alt="Spettrogramma - Sintesi complessa" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Linee melodiche e battimenti - Accordi e grumi sonori del sintetizzatore</p>
+                </div>
+
+                <h4>c2) You can hear it now - Time 10'44" - 11'13"</h4>
+                <p>Una voce di donna ripete in loop <em>"you can hear it now"</em> e quella di un uomo si sovrappone rispondendo <em>"hear what?"</em>.</p>
+
+                <h4>c3) Time 11'13" - 11'35"</h4>
+                <p>La voce di donna pronuncia <em>"the Jet"</em> e si apre un sottofondo già visto in precedenza, quello dei motori a reazione. Un dejavu che ci riporta ad un già vissuto, una nuova breve ricaduta onirica.</p>
+
+                <h4>c4) Time 11.35" - 12'23"</h4>
+                <p>Una melodia che arriva da lontano scorre anticipando la calata del sipario. Un delay ed un reverbero muovono questa melodia semplice e malinconica in re minore che cresce, si sposta, si rincorre con gli ultimi ricordi dei motori degli aerei. Gli aerei leggeri sembrano girare in armonia con la melodia sullo sfondo, un richiamo al cinema di Fellini.</p>
+
+                <h4>c5) Titoli di coda - Time 12'23" - 13'08"</h4>
+
+                <p>Come i titoli di coda di un'opera visuale entra la voce dell'Autore. E' il commiato dopo questo bel lungo viaggio in cui momenti di lucidità militare si sono alternati a scene oniriche.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page24_0.png" alt="Spettrogramma - Voce dell'autore" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Titoli di coda - La voce di John Heineman che ringrazia il pubblico</p>
+                </div>
+
+                <blockquote style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; font-style: italic; margin: 2rem 0;">
+                "Good evening ladies and gentlemen, ah, this is your composer speaking, ah, we hope you've enjoyed the composition, ah, as much as the technician and I have enjoyed doing it. I'd like to thank you very much for your participation here tonight ah, would just like to wish you a very good evening and a very pleasant journey ahead, Thank you".
+                </blockquote>
+
+                <p style="text-align: center; font-size: 1.2rem; margin-top: 3rem; color: var(--accent-purple);">
+                <strong>Un brano che apre a nuovi stili compositivi, mantenendo all'interno chiare matrici di stampo musicale tradizionale che ne fanno una Fantasia sonora di teatro musicale.</strong>
+                </p>
+
+            </div>
+        </section>
+
+        <!-- AIR PIECE ESSAY SECTION - ENGLISH -->
+        <section id="airpiece-en" class="section">
+            <div class="card">
+                <h1 style="text-align: center; font-size: 2rem; margin-bottom: 3rem; color: var(--accent-purple);">
+                    Air Piece. From Soundscape Ecoacoustics to Musical Theater Sound Fantasy
+                </h1>
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem;">by Francesco Mariano</p>
+
+                <!-- Introduction -->
+                <div style="background: rgba(72, 219, 251, 0.1); padding: 2rem; border-radius: 10px; border-left: 4px solid #48dbfb; margin-bottom: 3rem;">
+                    <p>
+                        Air Piece represents a pioneering work by John Heineman that transforms the soundscape of Rome's Fiumicino airport into a visionary electroacoustic composition. The work anticipates methodologies that would become central to contemporary data art.
+                    </p>
+
+                    <h3>Tripartite Structure</h3>
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <strong>Section A (0'00"-3'12")</strong>
+                            <p>Ethnomusicological documentation: direct recording of the soundscape with engines, turbines, announcements, and conversations.</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>Section B (3'12"-8'30")</strong>
+                            <p>Analog algorithmic processing: electroacoustic elaboration through loops, delay, filtering, and creation of "psychedelic vortices".</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>Section C (8'30"-13'08")</strong>
+                            <p>Synthesis and meta-commentary: predominance of the Synket with Brechtian device of direct composer intervention.</p>
+                        </div>
+                    </div>
+
+                    <h3>Technological Innovation</h3>
+                    <p>
+                        Use of the <strong>Synket</strong> (analog synthesizer developed by Paul Ketoff at Cinecittà), one of the first systematic integrations between musique concrète and electronic synthesis. The final estrangement device anticipates media art practices that would become canonical in the digital era.
+                    </p>
+
+                    <h3>Scientific Publication</h3>
+                    <p>
+                        <strong>Musicological essay:</strong> "Air Piece: From Ecoacoustics of the Soundscape to Sound Fantasy of Musical Theatre"<br>
+                        <strong>ISBN:</strong> 9780244560393 (2020)<br>
+                        <strong>Recognition:</strong> Fondazione Isabella Scelsi, Rome - John Heineman Archive (Fondo 7)
+                    </p>
+                </div>
+
+                <!-- Table of Contents -->
+                <h2 id="index-en">Table of Contents</h2>
+                <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                    <li><a href="#biography-en" style="color: var(--accent-blue);">- Biography of John Heineman</a> <span style="float: right;">p. 3</span></li>
+                    <li><a href="#overview-en" style="color: var(--accent-blue);">- Brief overview of the birth of soundscape composition</a> <span style="float: right;">p. 4</span></li>
+                    <li><a href="#fantasy-en" style="color: var(--accent-blue);">- From soundscape composition to musical theater sound fantasy</a></li>
+                    <li><a href="#analysis-en" style="color: var(--accent-blue);">- Analysis of Air Piece by John Heineman</a> <span style="float: right;">p. 7</span></li>
+                </ul>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- Biography -->
+                <h2 id="biography-en">Biography of John Heineman</h2>
+                <p>John Heineman (New York 1939) began studying trombone at Mannes College of Music while simultaneously studying composition, which he would continue in Rome, perfecting his skills with Goffredo Petrassi. He graduated from Columbia University. In 1966, he completed his course at the Accademia di Santa Cecilia, presenting his orchestral composition "Consequents" which was performed by the Orchestra dell'Accademia di Santa Cecilia.</p>
+
+                <p>He was also a student of Elias Tanenbaum, Peter Stearns and Boris Porena. "The apprenticeship with Tanenbaum went beyond, for Heineman, the boundaries of instrumental study: a student of Bohuslav Martinu, Tanenbaum was well-versed in the entire front of the European historical avant-garde (Bartók, Webern...) and the most recent trends in jazz (Parker)," [Alessandro Mastropietro]</p>
+
+                <p>Already during his first years of study at Mannes College of Music, he was fascinated by improvisation and often on weekends would invite musician friends, Alex Hershenson (trumpet) and Andy Pagano (clarinet), to the college for improvisation sessions seeking particular atmospheres. He personally attended concerts by Charlie Parker, Clifford Brown during the recording of "A Night at Birdland Vol. 1", John Coltrane with Thelonious Monk, remaining fascinated by improvisation since adolescence.</p>
+
+                <p>He was among the founders of the Gruppo di Improvvisazione Nuova Consonanza with which he performed concerts between 1965 and 1970, performing in various European cities including a concert for electronics and improvisation at the 31st Venice Festival of Contemporary Music in September 1968. With the Gruppo di Improvvisazione Nuova Consonanza he recorded several LPs (trombone and cello), including Avant Garde vol. II, Gruppe Il Gruppo, The Private Sea of Dreams.</p>
+
+                <p>He collaborated with the inter-disciplinary theater Gruppo Altro. He is the author, among others, of two conceptual works, Air Piece (1970) and Very, Very Beautiful (1973), which are considered emblematic in their genre. After living in Berlin, Canada and New York, since 1982 Heineman has resided permanently in Italy. After a pause of several years from music, he returned to playing first the flugelhorn and then the alto saxophone.</p>
+
+                <p>Air Piece was performed in Rome on February 15, 1970, at the Berliner Festwochen in 1973 and at the Manhattan School of Music in New York in 1974. Also in 1974, Very, Very Beautiful was presented, a 1974 work by John Heineman that uses similar compositional processes. It was performed in Rome between March 29 and 31, 1974 in collaboration with TEAM Roma at Beat 72.</p>
+
+                <p>Among various recognitions, he received the Composers Award from Broadcast Music Inc. (1965) and a Rome Prize Fellowship at the American Academy (1967-69).</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- Overview -->
+                <h2 id="overview-en">Brief Overview of the Birth of the Soundscape</h2>
+
+                <p>Raymond Murray Schafer defined the soundscape as the sonic environment that surrounds us and in which we live as perceived by the people immersed in it. We could also define the soundscape as the soundtrack of our lives, encompassing in the soundscape all the sounds that accompany our existence, from those we intercept involuntarily in daily activities to those to which we pay more attention such as a concert in a theater.</p>
+
+                <p>Sound can take on different connotations: sound as an objective physical phenomenon and sound as an auditory sensation. Among the sensory organs we identify in hearing a dual nature, hearing as a physiological phenomenon and listening as a psychological intellectual act. The ability to listen is an intentional act and can be developed. Listening is mediated by the individual's historical-socio-cultural presuppositions in the context in which they live.</p>
+
+                <p>The soundscape is in rapid and continuous change, sounds multiply and often standardize, canceling out characteristics typical of certain soundscapes. We can speak of an effect of sonic globalization. Airplanes, automobiles, industrial plants contribute to compromising both the psychophysical well-being of humans and to annihilating the uniqueness of places. The invasive presence of sounds mostly at low frequencies and of strong intensity makes the soundscape of different places increasingly homogeneous, canceling out territorial sonic identities.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- From soundscape to fantasy -->
+                <h2 id="fantasy-en">From Soundscape Composition to Musical Theater Sound Fantasy</h2>
+
+                <p>Air Piece is a musical theater sound fantasy with a plot and its own development. The sonic events that follow one another will create episodes of movement alternating with quieter phases, hectic and violent scenes, vortices, more static moments, and sudden scene changes.</p>
+
+                <p>We can certainly place Air Piece within soundscape composition, being at the same time one of the first compositions of this genre and an evolution of it, anticipating certain developments. As well defined by Murray Schafer, soundscape composition explores and interprets the sound of environments.</p>
+
+                <p>In Air Piece, the recorded sonic environment is undoubtedly part of a soundscape that has already rapidly changed and is in continuous evolution. We find ourselves immersed in a completely transfigured sonic environment, moving within this environment capturing its characteristics from different listening points.</p>
+
+                <p>Clear and frank expositions, immaculate sound recordings, true and raw, that transform into dreamy vortices with psychedelic references thanks to the compositional techniques implemented by the Author. Air Piece also induces the listener to relate the present soundscape, the one narrated and staged, to what is no longer, to what must be imagined before the sonic transfiguration that the environment has undergone.</p>
+
+                <p>We can only imagine how the places described in Air Piece must have sounded just a decade before the recordings (Fiumicino airport was built between 1958 and 1960). Imagining sounds is not easy, and it would require dedicated and in-depth studies on people's ability to imagine sounds and describe them. Even more difficult is imagining sounds that one does not know, even assuming (from photographic sources, videos or written and oral accounts) the sound sources present in a place, we could try to imagine the sounds but the lack of certain sound material remains a major deficiency.</p>
+
+                <p>This analysis of Air Piece highlights both the physical acoustic aspects and John Heineman's ability to have created from these sonic events a Work that is both a sonic document stimulating ecosonological research and a musical piece that evolves from the rigidity of pure documentation towards the creation of a musical theater sound fantasy.</p>
+
+                <p>As will emerge in detail from the following analysis, there are three main sections within the piece that, recalling theatrical language, we can recognize as scenes.</p>
+
+                <p><strong>The first scene</strong> is in pure soundscape composition style, with recordings made over several days inside and around the runway at Fiumicino airport. Other recordings were made at the American Academy in Rome: the voice of the child pronouncing "de dah...", the voice of a pilot interpreted by visual artist Jerry Kearns, the voice of his first wife Lydia Heineman up to the final voice of Heineman himself. These recordings are the result of recordings made starting from the spring of 1969 followed by hundreds of hours of listening and editing in the studio.</p>
+
+                <p><strong>In the second scene</strong> the soundscape is processed through filtering, loops and delay. In those years the influence of experimental and psychedelic currents was very strong, this second scene transports us into a "psychedelic trip" with pilots' voices in vortices of loops, effects and distortions. We remember that precisely in 1970, Timothy Leary, American writer, psychologist and artist, promoter of the use of psychedelic substances, escaped from prison to flee first to Algiers then to Switzerland. His resonance arrived strongly even in Rome. For more information on Timothy Leary, however, refer to other sources. The recordings of this section B come from a large amount of tapes in restricted archives to which Heineman had gained access.</p>
+
+                <p><strong>The third scene</strong> is predominantly electronic with an interlude of looped voices and airplane sounds. In this last section an analog tube synthesizer Synket ('Synthesiser-Ketoff') designed by Paul Ketoff, sound engineer for RCA and active in Rome at Cinecittà Film Studios, was used. The Synket was artisanally produced and practically every commercialized model was a prototype as it was in continuous evolution between 1965 and 1976.</p>
+
+                <h3>The Interdisciplinarity of Air Piece</h3>
+
+                <p>The interdisciplinarity of Air Piece leads us to highlight also the following binomials that characterize relationships in the piece:</p>
+                <ul>
+                    <li>man - environment</li>
+                    <li>man - speed (technology)</li>
+                    <li>speed (technology) - environment</li>
+                    <li>environment - music</li>
+                    <li>music - technology</li>
+                </ul>
+
+                <p>A clear distinction between concrete sounds and electronic sounds contrasts the first scenes, exclusively composed of environmental recordings, with the third almost exclusively electronic.</p>
+
+                <p>Also interesting to follow how the development of the human voice through the different scenes brings out the relationship between man and these changes, highlighting how man himself is both victim and cause of a sonic transformation. The human voice is present in the different scenes taking on different aspects and meanings.</p>
+
+                <p>In the first scene man is immersed in the dense uniform sonic grain, contributes to creating it almost unconsciously, is a victim of it. In the second we find an evolution towards supersonic speeds with man consciously protagonist. In the third scene, like film credits, we find the reassuring voice of the Author who closes the sound theater fantasy as the curtain falls.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- DETAILED ANALYSIS -->
+                <h2 id="analysis-en">Analysis of Air Piece</h2>
+
+                <p>Air Piece is a piece composed by John Heineman in 1970 making sound recordings at Fiumicino airport and in its surroundings and has a duration of 13'08". At the Electronic Music Studio "G. Rossini" in Pesaro, a Stereophonic version was made from the original four-track recordings, completing the recordings made at Fiumicino with archival recordings (voices of pilots, control tower and Frecce Tricolori) and the use of electronics.</p>
+
+                <p>To carry out the analysis of the piece, three macrosections have been identified which we will call A, B, C. In each section, subsections will be highlighted (a1, a2, a3,...b1,...). These divisions were determined for coherence of timbral events, highlighting over time the presence of various different sound sources, identifying the assemblages performed in the editing-composition phase, as well as divisions of a more subjective and suggestive character, always referring to clear parameters highlighted by the spectrogram images.</p>
+
+                <div class="info-grid" style="margin: 2rem 0;">
+                    <div class="info-box">
+                        <strong>Sec. A 0'0" - 3'12"</strong>
+                        <p>Exposition of the sonic environment. Fiumicino Airport.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Sec. B 3'12" - 8'30"</strong>
+                        <p>Airplanes. Takeoffs, landings. Pilots, Frecce Tricolori, sonic boom.</p>
+                    </div>
+                    <div class="info-box">
+                        <strong>Sec. C 8'30" - 13'08"</strong>
+                        <p>Electronics, author's voice.</p>
                     </div>
                 </div>
 
-                <h3>📊 Content Summary</h3>
-                <div class="info-grid">
-                    <div class="info-box">
-                        <strong>Part 1: Historical Context</strong>
-                        <p>Gruppo di Improvvisazione Nuova Consonanza (GINC), biographical notes on John Heineman, and the 1960s-70s avant-garde scene in Rome.</p>
-                    </div>
-                    <div class="info-box">
-                        <strong>Part 2: Spectral Analysis</strong>
-                        <p>Detailed frequency analysis of the three sections (A, B, C) with spectrograms showing the transformation from field recording to electronic composition.</p>
-                    </div>
-                    <div class="info-box">
-                        <strong>Part 3: Technological Innovation</strong>
-                        <p>Use of the Synket (Ketoff synthesizer), analog processing techniques, and integration between musique concrète and electronic synthesis.</p>
-                    </div>
-                    <div class="info-box">
-                        <strong>Part 4: Compositional Structure</strong>
-                        <p>Tripartite analysis: ethnomusicological documentation → algorithmic processing → synthesis and meta-commentary.</p>
-                    </div>
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SECTION A -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SECTION A - Exposition of the Sonic Environment</h3>
+
+                <p><em>Tonics: engines, turbines, crowd inside an airport</em><br>
+                <em>Signals: speaker voice, pilot</em></p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page8_0.png" alt="Spectrogram - Section A Overview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Panoramic view of Section A - Soundscape of Fiumicino airport</p>
                 </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page8_1.png" alt="Spectrogram - Section A Detail" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Spectral detail - Engine and turbine tonics with voice signals</p>
+                </div>
+
+                <h4>a1) Fiumicino Terminal - Time 0.00</h4>
+                <p>The piece begins with a loud car engine, very close and present. It is in rapid decay and immediately gives way to the surrounding environment. The voice of a speaker broadcast from loudspeakers becomes clearer, French pronunciation can be discerned although the meaning cannot be understood. We are therefore in the area of Fiumicino airport whose soundscape, together with the surrounding environment, will be described in the first part of the piece.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page9_0.png" alt="Spectrogram - Very intense initial engine" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">The very intense initial engine - Frequencies between 43 and 250 Hz with values up to -12dB</p>
+                </div>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-blue); margin: 1rem 0;">
+                <strong>Technical note:</strong> The very intense initial engine shows frequencies between 43 and 250 Hz with values up to -12dB that decay rapidly.
+                </p>
+
+                <p><strong>Time 5.845:</strong> The car engine decreases rapidly and in the same sonic event we perceive turbines in the distance with high-pitched sounds proceeding in an ascending glissando up to 3600Hz with weak but still clearly perceptible intensities (-31 dB).</p>
+
+                <h4>a2) Announcements - Time 12.00</h4>
+                <p>The glissando of the turbines ends and a richer spectrum in frequency range opens up. We are inside the airport and the voice of a speaker clearly shows the effects of reverberation typical of large enclosed spaces. At 17.250 we recognize a voice, with a rhythmic-melodic hint, repeated with a 500 ms delay (it starts at 17.250 on the left channel to repeat at 17.7500 on the right channel).</p>
+
+                <p><strong>Time 23.700 - 33.100:</strong> Three telephone rings follow one another producing a series of upper partials clearly distinguishable from the spectrogram. The first two on the left channel, the third, masked, also on the right. The background noise masks the partials below 3700 Hz.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page10_0.png" alt="Spectrogram - Telephone rings" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Telephone rings on the left channel - Background noise masks partials below 3700 Hz</p>
+                </div>
+
+                <h4>a3) Departure announcements - Time 33.100 - 1'36" (Only from the right channel)</h4>
+
+                <p><em>Speaker's voice:</em><br>
+                "Karachi, Calcutta, Bangkok, Hong Kong e Tokio. Verrà chiamato tre 5 minuti all'uscita numero cinque".<br><br>
+                From the background a turbine of an engine around 3000Hz, we define these turbines as tonics that we will often find throughout the piece.</p>
+
+                <p>Meanwhile the speaker's voice continues:<br>
+                46" May i have your attention please",<br>
+                49" Jal, Japan Airline inform that flight number 452<br>
+                53" to Cairo, Karachi...</p>
+
+                <p>...we hear, in the foreground and close up, the voice of a child, almost intoning a fragment of melody. <strong>"Dee dah, dee dah, de dah…de dah…de d…"</strong>. It is completely unexpected from the events that have followed so far, and creates a strong detachment from the soundscape that is taking shape. It is in the foreground and its detachment takes us very far away.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page11_0.png" alt="Spectrogram - Child's voice" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Signals - The child's voice (time 56.700) with upper harmonics in clear evidence</p>
+                </div>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-blue); margin: 1rem 0;">
+                <strong>Signals:</strong> The child's voice (time 56.700) with upper harmonics in clear evidence.
+                </p>
+
+                <p>New signals follow one another: the announcements continue with the voice of another speaker until giving way to turbines and engines that from tonics become soloists in a crescendo that develops between 1'06" and 1'36".</p>
+
+                <h4>a4) Turbines and jet engines - Time 1'36" - 2'09"</h4>
+                <p>Rapid crescendo of turbines and broadband engines closes section A with the tonics always present in the background. The ignition of an engine starts a new glissando of turbines that rapidly rise in frequency and intensity ending abruptly with a sharp cut. The ascending glissando of turbines and engines, first of exponential type then of logarithmic type, with an intensity increase reaching -7 dB.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page12_0.png" alt="Spectrogram - Turbine and engine glissando" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">The ascending glissando of turbines and engines with intensity increase up to -7 dB</p>
+                </div>
+
+                <h4>a5) Airplanes in flight. Calm. - Time 2'09" - 2'30"</h4>
+                <p>A fall into the void arrives at the end of the long previous crescendo. Suddenly only the engines remain, which now, with constant movement, seem calm and silent to us. A brief moment of tranquility with only the tonics until the appearance of new signals. The calmest phase with the engine tonics always present. A very dark and stable sound with a center band around 170 Hz and an intensity of -19 dB.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page12_1.png" alt="Spectrogram - Calm phase" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">The calmest phase - Dark and stable sound with center band at 170 Hz and intensity of -19 dB</p>
+                </div>
+
+                <h4>a6) Jerry Kearns pilot's voice - Time 2.30 - 3'12"</h4>
+
+                <p>2'32" Pilot's welcome message: <em>"good evening ladies and gentlemen this is your pilot speaking, i trust that your departure from L.A. was a comfortable one"</em>. In the background the tonic, airplane engine in flight, with constant movement.</p>
+
+                <p>2'38" Pilot's radio communications: <em>"Ah, we're looking forward to a very pleasant flight tonight, as we check the weather, we see no foreseeable problems as far as turbulence goes"</em></p>
+
+                <p>2'48" <em>"Our flight to Albuquerque should take approximately an hour and a half, to an hour and thirty-five minutes"</em></p>
+
+                <p>2'55" <em>"Ah, we hope you can settle in and relax and enjoy the trip. Please undo your seat belts."</em></p>
+
+                <p>3'01" <em>"I will cut back in later if any interesting sites - ah pass by - ah below us as we continue our journey".</em></p>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-purple); margin: 1rem 0;">
+                Jerry Kearns, visual artist and friend of John Heineman, recorded these dialogues at the American Academy. "Kearns spontaneously was able to imitate a typical American mid-western accent (perfect for the piot's intervention on board a plane that I was looking for)" email from Heineman. "That recording helped to shape the direction of the piece, triggering the idea of psychedelic effects - of variable speed, break-up of his speech (use of filters etc.) suggesting various contrapuntal voice-over techniques (the settle-in and relax and enjoy the trip - triggering psychedelic effects idea - the comic-like effect of his voice slowed down to mimic an inebriated pilot)."
+                </p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SECTION B -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SECTION B - In Flight. Pilots, Control Tower, Aerobatics, Sonic Boom</h3>
+
+                <p><em>Tonics: engines, turbines, automobiles</em><br>
+                <em>Signals: voices of pilots in flight, voices from control tower, looped voices, sonic boom</em></p>
+
+                <p>This section is a dreamlike journey of man in a kaleidoscope of speed. The voices of pilots in flight that chase each other in swirling canons will gradually give way to turbines and jet engines alternating calm sonic events with very hectic and violent events such as the sonic booms of breaking the sound barrier. We are at the mercy of the events that follow one another, phases of rest alternate with psychedelic dreams that transport the listener beyond the usual.</p>
+
+                <h4>b1) Time 3'12" - 3'18"</h4>
+                <p>New brief moment of tranquility with only the tonics of engines in flight.</p>
+
+                <h4>b2) Signals. 4-voice imitation - Time 3'18" - 3'39</h4>
+                <p>Looped pilots' voices create vortices in crescendo. Above the constant background of airplane engines, the voices move quickly creating a swirling movement, a psychedelic reference in contrast to the stability of airplane engines in flight.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page15_0.png" alt="Spectrogram - Looped voices" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Looped pilots' voices with engines in flight - Swirling psychedelic vortices</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page15_1.png" alt="Spectrogram - Voice details" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Alternating events of tonics and voices - Narrowband signals in descending glissandi</p>
+                </div>
+
+                <h4>b3-b6) Time 3'39" - 4'23"</h4>
+                <p>Events of only tonics (engines in flight) and returns of looped pilots' voices alternate. The last episode of this alternation culminates with: <em>"……Settle in and relax and enjoy the trip"</em>. Clear narrowband signals can be seen from the spectrogram moving in descending glissandi (from 4800Hz to 4350Hz).</p>
+
+                <h4>b7) Time 4'23" - 4'33"</h4>
+                <p>Very intense engine tonics in flight at low frequencies.</p>
+
+                <h4>b8) Military alphabet - Time 4'33 - 5'24"</h4>
+
+                <p><em>"Roger fox baker baker dog Quinn, you are clear to descend to two thousand feet…and check your finny fox fox one zero one seven point two".</em></p>
+
+                <p>Communications between pilots and control tower in military alphabet follow one another. <em>"Give us a call when 3 miles out, over.ah c"</em><br>
+                Second voice: <em>"…Roger, Fox, Baker, Baker Dog Quinn…"</em></p>
+
+                <p>The voice signals of the pilots can be distinguished, repeating in loops and overlapping in canon, with the characteristic broadband hiss of radio communications.</p>
+
+                <p>5'10" <em>"Check your Finny FOX FOX 1017.2"</em><br>
+                <em>"Give us a call when 3 miles out, over".</em></p>
+
+                <p>At 5'12" a very intense tonic while communications between pilots and control tower continue.</p>
+
+                <h4>b9) turbines, jet engines - Time 5'24" - 5'46"</h4>
+                <p>Strong narrowband signals, in multiple descending glissandi. Turbine signals with very intense engine tonics (-7 dB)</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page18_0.png" alt="Spectrogram - Turbines and jet engines" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Turbines and jet engines - Descending glissandi with intensity of -7 dB</p>
+                </div>
+
+                <h4>b10) Performance by the Frecce Tricolori of the Aeronautica Militare - Time 5'46" 6'04"</h4>
+
+                <p>A speaker communicates from loudspeakers in an open place: <em>"E' già sul campo la pattuglia italiana"… "…sta per eseguire una virata di tipo Schneider…si portano nuovamente sul campo per eseguire una virata tipo Schneider".</em></p>
+
+                <p style="background: #f5f5f5; padding: 1rem; border-left: 4px solid var(--accent-yellow); margin: 1rem 0;">
+                The Schneider-type turn is a particular maneuver performed by a passage of the so-called "soloist", imprinting an undulating movement on the airplane. The maneuver is generally performed in landing configuration and at speeds close to stall. In the formation each aircraft has a very specific role, which each pilot will observe for the safety and success of the evolution. (Note the analogies between the terminology used in aerial acrobatics and musical terminology. The formation, the soloist, looping, sonic boom, cardioid formation).
+                </p>
+
+                <p>The very rapid passages of the airplanes create broadband spectra that grow and decay rapidly. From the spectrogram we can clearly identify three passages between 5'55" and 6'04.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page19_0.png" alt="Spectrogram - Frecce Tricolori" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Aerial maneuvers of the Frecce Tricolori - Broadband spectra with three identifiable passages</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page19_1.png" alt="Spectrogram - Schneider turn" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Schneider-type turn - Rapid crescendo and decrescendo of aerial passages</p>
+                </div>
+
+                <h4>b11) Sonic boom - Time 6'04" - 6'11"</h4>
+                <p><em>"Attenzione, fra poco udremo il bang che si verifica quando avviene il superamento della barriera sonica"</em>. Instead of the sonic boom we hear however a not too intense roar of brief duration.</p>
+
+                <h4>b12) Pilots control tower - Time 6'12" - 6'35"</h4>
+
+                <p>Engines in flight, dialogues between control tower and pilots that overlap:</p>
+                <p><em>"..i'll be over in about, ah, 3 minutes, 4 minutes, over"<br>
+                "…Able Dog Charlie, Roger, we are standing by waiting your call when reaching Cittavecchia, over"<br>
+                "ah, my position is ? ah' ventuno decon, over"<br>
+                "Roma approach 119.1, over"<br>
+                "Request your altitude, also, over"<br>
+                "Altitude 4,500 feet"<br>
+                "ah, Fox, Baker, baker, dog"</em></p>
+
+                <h4>b13) Time 6'35" - 7'02"</h4>
+
+                <p><em>"Hanno compiuto il primo looping"</em> - voice of a commentator commenting on the aerial maneuvers of the Frecce Tricolori and announcement of a new very strong sonic boom in a band between 40Hz and 180Hz with intensity up to -6 dB.</p>
+
+                <p><em>"…jet 84F effetteranno la superamento della barriera del suono"<br>
+                "… e fra poco udremo il bang…secondo bang".</em></p>
+
+                <p>This violent phase closes with the sound of turbines that pass by us quickly creating brief descending glissandi of strong intensity.</p>
+
+                <h4>b14) Time 7'02" - 7'46"</h4>
+                <p>A scene opens with only engines as protagonists. These are engines of different types, and helicopter rotors. As can be clearly seen from the spectrogram, the sound of the propeller is described by dense vertical broadband lines. At low frequencies always the very intense engine tonics.</p>
+
+                <h4>b15) Time 7'46" - 8'29"</h4>
+
+                <p>Moments of relaxation alternate with episodes with engines of different types, but no longer supersonic aircraft. At 8'03" a woman's voice laughing on the left channel only and developing into a fragmented, hysterical and compulsive laugh that, mixed with the engines, evolves into a melodic fragment closing the long section B.</p>
+
+                <p>The voice on the left channel that closes section B with a repeated rhythmic melodic fragment: <strong>"Keep singin' keep singin'"</strong>. This is the voice of Candy Wechsler who takes us into a transitional phase projecting us, from the dark and menacing scene that is concluding, to the shining final scene.</p>
+
+                <hr style="margin: 3rem 0; border: 1px solid var(--border-color);">
+
+                <!-- SECTION C -->
+                <h3 style="color: var(--accent-purple); font-size: 1.5rem;">SECTION C - Electronics and Author's Voice</h3>
+
+                <p>In the third scene linear, defined and constant electronic sounds contrast with the scenario seen in the first two scenes. Here are brief voice loops remnants of the previous scene in a sort of brief ostinato. After the long journey it is a return to reality. A return that initially takes shape with almost pure sounds and then evolves into more complex spectra, accompanied by the author's voice that thanks and accompanies the closing of the curtain. A landing on more conventional territories. The dimension that is created in the last scene takes us back to reality.</p>
+
+                <h4>c1) Synket - Time 8'30" - 10'44"</h4>
+
+                <p>The sounds of the Synket open the scenario joining the voice loop that repeats <em>"Keep singin' keep singin'"</em>. At time 8'53" the voice loop ends and also on the right channel the sounds of the Synthesizer begin. An increasingly dense weave of sounds creates melodic lines and beats, intermittencies, chords and clusters that evolve and intersect.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page21_0.png" alt="Spectrogram - Synket" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Entrance of the Synket - Linear and constant electronic sounds</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page21_1.png" alt="Spectrogram - Voice loops" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Voice loop "Keep singin'" with electronic synthesis - Dense weave of sounds</p>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page22_0.png" alt="Spectrogram - Complex synthesis" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">Melodic lines and beats - Chords and sonic clusters of the synthesizer</p>
+                </div>
+
+                <h4>c2) You can hear it now - Time 10'44" - 11'13"</h4>
+                <p>A woman's voice repeats in a loop <em>"you can hear it now"</em> and that of a man overlaps responding <em>"hear what?"</em>.</p>
+
+                <h4>c3) Time 11'13" - 11'35"</h4>
+                <p>The woman's voice pronounces <em>"the Jet"</em> and a background previously seen opens up, that of jet engines. A dejavu that brings us back to an already lived experience, a new brief dreamlike relapse.</p>
+
+                <h4>c4) Time 11.35" - 12'23"</h4>
+                <p>A melody arriving from afar flows anticipating the falling of the curtain. A delay and a reverb move this simple and melancholic melody in D minor that grows, moves, chases itself with the last memories of airplane engines. The light aircraft seem to circle in harmony with the melody in the background, a reference to Fellini's cinema.</p>
+
+                <h4>c5) End credits - Time 12'23" - 13'08"</h4>
+
+                <p>Like the credits of a visual work, the Author's voice enters. It is the farewell after this beautiful long journey in which moments of military lucidity alternated with dreamlike scenes.</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="images/spectrograms/spectrogram_page24_0.png" alt="Spectrogram - Author's voice" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-top: 0.5rem;">End credits - John Heineman's voice thanking the audience</p>
+                </div>
+
+                <blockquote style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; font-style: italic; margin: 2rem 0;">
+                "Good evening ladies and gentlemen, ah, this is your composer speaking, ah, we hope you've enjoyed the composition, ah, as much as the technician and I have enjoyed doing it. I'd like to thank you very much for your participation here tonight ah, would just like to wish you a very good evening and a very pleasant journey ahead, Thank you".
+                </blockquote>
+
+                <p style="text-align: center; font-size: 1.2rem; margin-top: 3rem; color: var(--accent-purple);">
+                <strong>A piece that opens up new compositional styles, maintaining within it clear matrices of traditional musical stamp that make it a Musical Theater Sound Fantasy.</strong>
+                </p>
+
             </div>
         </section>
 
@@ -1639,11 +2375,11 @@
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem;">
                             <button class="markov-order-btn" data-order="1">
                                 Order 1<br>
-                                <small style="font-size: 0.75rem; opacity: 0.8;">Random</small>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Chaotic</small>
                             </button>
                             <button class="markov-order-btn" data-order="2">
                                 Order 2<br>
-                                <small style="font-size: 0.75rem; opacity: 0.8;">Simple</small>
+                                <small style="font-size: 0.75rem; opacity: 0.8;">Fragmented</small>
                             </button>
                             <button class="markov-order-btn active" data-order="3">
                                 Order 3<br>
@@ -1655,7 +2391,7 @@
                             </button>
                         </div>
                         <div id="orderDescription" style="margin-top: 1rem; padding: 0.8rem; background: rgba(255,255,255,0.5); border-radius: 6px; font-size: 0.9rem; color: #555;">
-                            <strong>Order 3 (Balanced):</strong> Analyzes sequences of 3 words. Creates text that maintains grammatical structure while introducing creative variations. Ideal for poetic and literary texts.
+                            <strong>Order 3 (Balanced):</strong> Uses 3-word context. Maintains grammatical coherence while introducing creative variations. Best balance between originality and readability. Ideal for most texts.
                         </div>
                     </div>
 
@@ -1685,38 +2421,38 @@
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.2rem;">
                         <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #e17055;">
-                            <strong style="color: #e17055;">🎲 Order 1 (Unigram)</strong>
+                            <strong style="color: #e17055;">🎲 Order 1 (Chaotic)</strong>
                             <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
-                                Looks at only <strong>1 previous word</strong>. Results are often chaotic and surreal, breaking all grammatical rules.
-                                <br><strong>Best for:</strong> Dadaist poetry, experimental art, maximum unpredictability.
-                                <br><strong>Example:</strong> "Beautiful remember. You? Very I Italian."
+                                Uses <strong>1-word context</strong> with automatic fallback to weighted random selection. Creates highly unpredictable text with unexpected word combinations. The algorithm respects word frequencies from the source but allows maximum chaos.
+                                <br><strong>Best for:</strong> Experimental poetry, absurdist art, Dadaist performances, maximum unpredictability.
+                                <br><strong>Technical:</strong> Bigram model with unigram fallback. High entropy, low coherence.
                             </p>
                         </div>
 
                         <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #fdcb6e;">
-                            <strong style="color: #e17055;">🌱 Order 2 (Bigram)</strong>
+                            <strong style="color: #e17055;">🌱 Order 2 (Fragmented)</strong>
                             <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
-                                Looks at <strong>2 previous words</strong>. Creates simple sentences with basic grammar but frequent logic jumps.
-                                <br><strong>Best for:</strong> Fragmented dialogue, stream of consciousness, minimalist texts.
-                                <br><strong>Example:</strong> "Very beautiful Rome. I remember everything beautiful."
+                                Uses <strong>2-word context</strong> with hierarchical backoff. Creates fragmented but somewhat grammatical text with frequent topic jumps. Better than Order 1 at maintaining local coherence.
+                                <br><strong>Best for:</strong> Stream of consciousness, fragmented narratives, minimalist experimental writing.
+                                <br><strong>Technical:</strong> Trigram model with bigram→unigram fallback. Medium entropy.
                             </p>
                         </div>
 
                         <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #48dbfb;">
-                            <strong style="color: #0984e3;">⚖️ Order 3 (Trigram) - Recommended</strong>
+                            <strong style="color: #0984e3;">⚖️ Order 3 (Balanced) - Recommended</strong>
                             <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
-                                Looks at <strong>3 previous words</strong>. Perfect balance between creativity and coherence. Maintains grammatical structure while creating surprising variations.
-                                <br><strong>Best for:</strong> Literary texts, poetry, artistic prose, theatrical scripts.
-                                <br><strong>Example:</strong> "You speak Italian? Very beautiful. I remember everything. Do you remember Rome?"
+                                Uses <strong>3-word context</strong> with full hierarchical backoff (3→2→1→0). Perfect balance between creativity and coherence. Maintains grammatical structure while introducing creative variations. Never gets stuck thanks to robust fallback chain.
+                                <br><strong>Best for:</strong> Literary texts, poetry, artistic prose, theatrical scripts, most creative writing tasks.
+                                <br><strong>Technical:</strong> Tetragram model with complete backoff hierarchy.
                             </p>
                         </div>
 
                         <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #00b894;">
-                            <strong style="color: #00b894;">🎯 Order 4 (Tetragram)</strong>
+                            <strong style="color: #00b894;">🎯 Order 4 (Coherent)</strong>
                             <p style="font-size: 0.85rem; margin: 0.5rem 0 0 0; line-height: 1.5;">
-                                Looks at <strong>4 previous words</strong>. Creates highly coherent text, almost indistinguishable from the original. Requires more input text.
-                                <br><strong>Best for:</strong> Long texts, novels, essays, technical documents.
-                                <br><strong>Example:</strong> "I don't remember. Oh, you speak Italian? Very beautiful. I like Rome."
+                                Uses <strong>4-word context</strong> with full backoff chain (4→3→2→1→0). Produces highly coherent text that closely mirrors the original style. Best with longer source texts that provide enough 5-grams for statistical learning.
+                                <br><strong>Best for:</strong> Long source texts (3+ paragraphs), novels, essays, maintaining consistent voice and style.
+                                <br><strong>Technical:</strong> 5-gram model with complete hierarchical smoothing.
                             </p>
                         </div>
                     </div>
@@ -1750,6 +2486,69 @@
                         <strong>🌑 Dark Room:</strong> Maximum sensitivity for low-light environments. Increases brightness and detects subtle movements.<br>
                         <strong>☀️ Normal:</strong> Balanced settings for standard indoor lighting conditions.<br>
                         <strong>💡 Bright Light:</strong> Reduced sensitivity for very bright environments. Prevents over-detection.
+                    </p>
+                </div>
+
+                <!-- Text Generation Controls -->
+                <div style="padding: 1.2rem; background: rgba(254, 202, 87, 0.08); border-radius: 10px; margin-bottom: 1rem; border: 1px solid rgba(254, 202, 87, 0.2);">
+                    <strong style="color: var(--accent-yellow); font-size: 1.1rem;">📝 Text Generation Controls</strong>
+
+                    <div style="margin-top: 1rem;">
+                        <label style="display: block; margin-bottom: 0.3rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            <strong>Slow Motion Update Speed</strong> <span id="slowSpeedValue" style="color: var(--accent-yellow);">3.0s</span>
+                        </label>
+                        <input type="range" id="slowSpeedSlider" min="1000" max="8000" step="200" value="3000"
+                               style="width: 100%; cursor: pointer;">
+                        <p style="font-size: 0.75rem; margin: 0.3rem 0 0 0; color: #888; line-height: 1.3;">
+                            ⏱️ How often text changes during slow movements. Higher = text stays longer (more readable).
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 1rem;">
+                        <label style="display: block; margin-bottom: 0.3rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            <strong>Fast Motion Update Speed</strong> <span id="fastSpeedValue" style="color: var(--accent-yellow);">1.5s</span>
+                        </label>
+                        <input type="range" id="fastSpeedSlider" min="300" max="4000" step="100" value="1500"
+                               style="width: 100%; cursor: pointer;">
+                        <p style="font-size: 0.75rem; margin: 0.3rem 0 0 0; color: #888; line-height: 1.3;">
+                            ⚡ How often text changes during fast movements. Lower = rapid word changes.
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 1rem;">
+                        <label style="display: block; margin-bottom: 0.3rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            <strong>Glitch Character Probability</strong> <span id="glitchIntensityValue" style="color: var(--accent-yellow);">8%</span>
+                        </label>
+                        <input type="range" id="glitchIntensitySlider" min="0" max="50" step="2" value="8"
+                               style="width: 100%; cursor: pointer;">
+                        <p style="font-size: 0.75rem; margin: 0.3rem 0 0 0; color: #888; line-height: 1.3;">
+                            🎲 Chance each character becomes punctuation (.,!?-) during abrupt movements. 0% = clean text.
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 1rem;">
+                        <label style="display: block; margin-bottom: 0.3rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            <strong>Text Size Range</strong> <span id="textSizeRangeValue" style="color: var(--accent-yellow);">0.8rem → 6.0rem</span>
+                        </label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: #888;">Min Size</label>
+                                <input type="range" id="minTextSizeSlider" min="0.5" max="2.0" step="0.1" value="0.8"
+                                       style="width: 100%; cursor: pointer;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #888;">Max Size</label>
+                                <input type="range" id="maxTextSizeSlider" min="2.0" max="10.0" step="0.5" value="6.0"
+                                       style="width: 100%; cursor: pointer;">
+                            </div>
+                        </div>
+                        <p style="font-size: 0.75rem; margin: 0.3rem 0 0 0; color: #888; line-height: 1.3;">
+                            📏 Text grows from min (slow motion) to max (fast/abrupt motion). Try min=0.5, max=8 for dramatic effect!
+                        </p>
+                    </div>
+
+                    <p style="font-size: 0.8rem; margin: 1rem 0 0 0; color: var(--text-secondary); font-style: italic; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 5px;">
+                        💡 <strong>Quick Test:</strong> Move slowly → text changes every few seconds. Move fast → text grows larger and changes faster. Move abruptly → glitch effect!
                     </p>
                 </div>
                 
@@ -2565,6 +3364,112 @@
             return Math.round(db);
         }
 
+        // ===== IMPROVED COLOR MAPPING =====
+        // Perceptually uniform color gradient: Black -> Blue -> Cyan -> Green -> Yellow -> Orange -> Red -> White
+        function getSpectrogramColor(value) {
+            // Apply dynamic range compression for better visibility of quieter frequencies
+            const compressed = Math.pow(value / 255, 0.5); // Gamma correction for better perception
+            const percent = compressed;
+
+            let r, g, b;
+
+            if (percent < 0.15) {
+                // Black to dark blue
+                const t = percent / 0.15;
+                r = 0;
+                g = 0;
+                b = Math.floor(t * 80);
+            } else if (percent < 0.3) {
+                // Dark blue to cyan
+                const t = (percent - 0.15) / 0.15;
+                r = 0;
+                g = Math.floor(t * 150);
+                b = 80 + Math.floor(t * 175);
+            } else if (percent < 0.45) {
+                // Cyan to green
+                const t = (percent - 0.3) / 0.15;
+                r = 0;
+                g = 150 + Math.floor(t * 105);
+                b = 255 - Math.floor(t * 155);
+            } else if (percent < 0.6) {
+                // Green to yellow
+                const t = (percent - 0.45) / 0.15;
+                r = Math.floor(t * 255);
+                g = 255;
+                b = 100 - Math.floor(t * 100);
+            } else if (percent < 0.75) {
+                // Yellow to orange
+                const t = (percent - 0.6) / 0.15;
+                r = 255;
+                g = 255 - Math.floor(t * 100);
+                b = 0;
+            } else if (percent < 0.9) {
+                // Orange to red
+                const t = (percent - 0.75) / 0.15;
+                r = 255;
+                g = 155 - Math.floor(t * 155);
+                b = 0;
+            } else {
+                // Red to white (peaks)
+                const t = (percent - 0.9) / 0.1;
+                r = 255;
+                g = Math.floor(t * 255);
+                b = Math.floor(t * 255);
+            }
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // ===== LOGARITHMIC FREQUENCY MAPPING =====
+        // Maps linear frequency bins to logarithmic Y positions for better perception
+        function getLogY(binIndex, canvasHeight) {
+            const nyquist = audioContext.sampleRate / 2;
+            const freq = (binIndex * nyquist) / bufferLength;
+
+            // Logarithmic mapping: 20 Hz to Nyquist
+            const minFreq = 20;
+            const maxFreq = nyquist;
+
+            if (freq < minFreq) return canvasHeight;
+
+            const logMin = Math.log10(minFreq);
+            const logMax = Math.log10(maxFreq);
+            const logFreq = Math.log10(freq);
+
+            const normalized = (logFreq - logMin) / (logMax - logMin);
+            return canvasHeight - (normalized * canvasHeight);
+        }
+
+        // ===== FREQUENCY LABELS =====
+        function drawFrequencyLabels() {
+            const labelFreqs = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000];
+            const nyquist = audioContext.sampleRate / 2;
+
+            canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            canvasCtx.font = '11px monospace';
+            canvasCtx.textAlign = 'right';
+            canvasCtx.textBaseline = 'middle';
+
+            labelFreqs.forEach(freq => {
+                if (freq > nyquist) return;
+
+                const binIndex = (freq / nyquist) * bufferLength;
+                const y = getLogY(binIndex, spectrogramCanvas.height);
+
+                // Draw label
+                const label = freq >= 1000 ? `${freq/1000}k` : `${freq}`;
+                canvasCtx.fillText(label, spectrogramCanvas.width - 5, y);
+
+                // Draw grid line
+                canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                canvasCtx.lineWidth = 1;
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(0, y);
+                canvasCtx.lineTo(spectrogramCanvas.width - 40, y);
+                canvasCtx.stroke();
+            });
+        }
+
         function drawLiveSpectrogram() {
             if (!timelineAudio || timelineAudio.paused) {
                 return;
@@ -2584,69 +3489,39 @@
 
             const currentColumn = Array.from(dataArray);
             spectrogramHistory.push(currentColumn);
-            
+
             if (spectrogramHistory.length > MAX_HISTORY_COLUMNS) {
                 spectrogramHistory.shift();
             }
 
+            // Clear canvas with black background
             canvasCtx.fillStyle = '#000';
             canvasCtx.fillRect(0, 0, spectrogramCanvas.width, spectrogramCanvas.height);
 
-            canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            canvasCtx.lineWidth = 1;
-            for (let i = 0; i < 7; i++) {
-                const y = (i / 6) * spectrogramCanvas.height;
-                canvasCtx.beginPath();
-                canvasCtx.moveTo(0, y);
-                canvasCtx.lineTo(spectrogramCanvas.width, y);
-                canvasCtx.stroke();
-            }
-
             const columnWidth = spectrogramCanvas.width / Math.min(spectrogramHistory.length, MAX_HISTORY_COLUMNS);
-            const binHeight = spectrogramCanvas.height / bufferLength;
-            
+
+            // Draw spectrogram with logarithmic frequency scale
             for (let col = 0; col < spectrogramHistory.length; col++) {
                 const column = spectrogramHistory[col];
                 const x = col * columnWidth;
-                
-                for (let i = 0; i < bufferLength; i++) {
+
+                // Draw each frequency bin with logarithmic Y mapping
+                for (let i = 0; i < bufferLength - 1; i++) {
                     const value = column[i] || 0;
-                    const percent = value / 255;
-                    
-                    const y = spectrogramCanvas.height - ((i + 1) * binHeight);
-                    
-                    let r, g, b;
-                    if (percent < 0.2) {
-                        const t = percent / 0.2;
-                        r = 26 + t * 25;
-                        g = 0;
-                        b = 51 + t * 51;
-                    } else if (percent < 0.4) {
-                        const t = (percent - 0.2) / 0.2;
-                        r = 51 + t * 153;
-                        g = 0;
-                        b = 102 - t * 102;
-                    } else if (percent < 0.6) {
-                        const t = (percent - 0.4) / 0.2;
-                        r = 204 + t * 51;
-                        g = t * 51;
-                        b = 0;
-                    } else if (percent < 0.8) {
-                        const t = (percent - 0.6) / 0.2;
-                        r = 255;
-                        g = 51 + t * 153;
-                        b = 0;
-                    } else {
-                        const t = (percent - 0.8) / 0.2;
-                        r = 255;
-                        g = 204 + t * 51;
-                        b = t * 153;
-                    }
-                    
-                    canvasCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-                    canvasCtx.fillRect(x, y, columnWidth + 1, binHeight + 1);
+                    const nextValue = column[i + 1] || 0;
+
+                    const y1 = getLogY(i, spectrogramCanvas.height);
+                    const y2 = getLogY(i + 1, spectrogramCanvas.height);
+                    const height = Math.abs(y1 - y2);
+
+                    // Use improved color mapping
+                    canvasCtx.fillStyle = getSpectrogramColor(value);
+                    canvasCtx.fillRect(x, y2, columnWidth + 0.5, height + 0.5);
                 }
             }
+
+            // Draw frequency labels and grid
+            drawFrequencyLabels();
 
             updateTimeDisplay();
         }
@@ -2716,23 +3591,27 @@
             });
         }
 
+        // ===== INTERACTIVE TOOLTIP =====
+        const spectrogramTooltip = document.getElementById('spectrogramTooltip');
+
         if (spectrogramContainer) {
+            // Click handler for navigation
             spectrogramContainer.addEventListener('click', async (e) => {
                 if (!timelineAudio) return;
-                
+
                 if (!audioContext) {
                     initAudioAnalyser();
                 }
-                
+
                 const rect = spectrogramContainer.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 const percentage = clickX / rect.width;
-                
+
                 const duration = timelineAudio.duration || 680;
                 timelineAudio.currentTime = percentage * duration;
-                
+
                 spectrogramHistory = [];
-                
+
                 if (timelineAudio.paused) {
                     if (audioContext.state === 'suspended') {
                         await audioContext.resume();
@@ -2740,6 +3619,76 @@
                     timelineAudio.play();
                     playTimelineBtn.innerHTML = '⏸ Pause';
                     drawLiveSpectrogram();
+                }
+            });
+
+            // Mousemove handler for tooltip
+            spectrogramContainer.addEventListener('mousemove', (e) => {
+                if (!spectrogramTooltip || !audioContext || !spectrogramHistory.length) return;
+
+                const rect = spectrogramContainer.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                // Calculate time from X position
+                const timePercentage = mouseX / rect.width;
+                const duration = timelineAudio ? (timelineAudio.duration || 680) : 680;
+                const time = timePercentage * duration;
+                const mins = Math.floor(time / 60);
+                const secs = Math.floor(time % 60);
+                const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+                // Calculate frequency from Y position (inverse of getLogY)
+                const normalizedY = 1 - (mouseY / rect.height);
+                const nyquist = audioContext.sampleRate / 2;
+                const minFreq = 20;
+                const logMin = Math.log10(minFreq);
+                const logMax = Math.log10(nyquist);
+                const logFreq = logMin + normalizedY * (logMax - logMin);
+                const freq = Math.pow(10, logFreq);
+                const freqStr = freq >= 1000 ? `${(freq/1000).toFixed(1)}k Hz` : `${Math.round(freq)} Hz`;
+
+                // Get amplitude from current data
+                let amplitudeStr = '--';
+                if (spectrogramHistory.length > 0) {
+                    const colIndex = Math.floor((mouseX / rect.width) * spectrogramHistory.length);
+                    if (colIndex >= 0 && colIndex < spectrogramHistory.length) {
+                        const column = spectrogramHistory[colIndex];
+                        const binIndex = Math.floor((freq / nyquist) * bufferLength);
+                        if (binIndex >= 0 && binIndex < column.length) {
+                            const value = column[binIndex];
+                            const db = -60 + (value / 255) * 60; // Approximate dB scale
+                            amplitudeStr = `${db.toFixed(1)} dB`;
+                        }
+                    }
+                }
+
+                // Update tooltip content
+                spectrogramTooltip.innerHTML = `
+                    <div><strong>Time:</strong> ${timeStr}</div>
+                    <div><strong>Freq:</strong> ${freqStr}</div>
+                    <div><strong>Level:</strong> ${amplitudeStr}</div>
+                `;
+
+                // Position tooltip
+                spectrogramTooltip.style.display = 'block';
+                spectrogramTooltip.style.left = (mouseX + 15) + 'px';
+                spectrogramTooltip.style.top = (mouseY + 15) + 'px';
+
+                // Keep tooltip in bounds
+                const tooltipRect = spectrogramTooltip.getBoundingClientRect();
+                if (mouseX + tooltipRect.width + 15 > rect.width) {
+                    spectrogramTooltip.style.left = (mouseX - tooltipRect.width - 15) + 'px';
+                }
+                if (mouseY + tooltipRect.height + 15 > rect.height) {
+                    spectrogramTooltip.style.top = (mouseY - tooltipRect.height - 15) + 'px';
+                }
+            });
+
+            // Hide tooltip on mouse leave
+            spectrogramContainer.addEventListener('mouseleave', () => {
+                if (spectrogramTooltip) {
+                    spectrogramTooltip.style.display = 'none';
                 }
             });
         }
@@ -2794,136 +3743,416 @@
         });
 
         // ===== MARKOV CHAIN GENERATOR =====
-        // Professional Markov Chain Generator with Multiple Orders
+        // Professional Frequency-Based Markov Chain with Hierarchical Backoff
         class MarkovChain {
-            constructor(order = 3) {
-                this.order = order;
-                this.chain = {};
+            constructor(maxOrder = 4) {
+                this.maxOrder = maxOrder;
+                this.currentOrder = maxOrder; // Default starting order for generation
+
+                // Frequency-based chains: Map<order, Map<state, Map<nextWord, count>>>
+                this.chains = new Map();
+
+                // Unigrams for ultimate fallback (Order 0)
+                this.unigrams = new Map();
+
+                // Starting states stored as arrays of tokens
                 this.startStates = [];
+
                 this.punctuation = ['.', '!', '?'];
             }
 
-            // Clean and tokenize text preserving punctuation
+            /**
+             * Improved tokenization with better regex
+             * Handles contractions (don't, it's) and punctuation
+             */
             tokenize(text) {
-                // Preserve punctuation as separate tokens
-                return text
-                    .replace(/([.!?])/g, ' $1 ')
-                    .split(/\s+/)
-                    .filter(w => w.length > 0);
+                // Match words (including contractions) OR punctuation
+                const tokens = text.match(/[\w']+|[.,!?;:]/g);
+                return tokens || [];
             }
 
-            // Check if a word is a sentence start (capitalized)
-            isSentenceStart(word) {
-                return word.length > 0 && word[0] === word[0].toUpperCase();
+            /**
+             * Collapse runs of identical consecutive tokens
+             * Example: ["very", "very", "very"] -> ["very"]
+             */
+            collapseRuns(tokens, collapseProb = 0.7) {
+                const result = [];
+                let lastToken = null;
+
+                for (const token of tokens) {
+                    // If same as previous and random check passes, skip it
+                    if (token === lastToken && Math.random() < collapseProb) {
+                        continue;
+                    }
+                    result.push(token);
+                    lastToken = token;
+                }
+
+                return result;
             }
 
+            /**
+             * Train all orders with advanced anti-fossilization strategies
+             * Uses frequency counts, subsampling, and run collapsing
+             */
             train(text) {
-                this.chain = {};
+                let tokens = this.tokenize(text);
+
+                if (tokens.length < this.maxOrder * 3) {
+                    console.warn(`Warning: Text may be too short for order ${this.maxOrder}`);
+                }
+
+                // STRATEGY: Collapse repetitive runs to reduce fossilization
+                tokens = this.collapseRuns(tokens, 0.7);
+
+                // Reset all data structures
+                this.chains.clear();
+                this.unigrams.clear();
                 this.startStates = [];
 
-                const tokens = this.tokenize(text);
+                // Calculate total for subsampling frequent tokens
+                const totalTokens = tokens.length;
 
-                // Build chain
-                for (let i = 0; i < tokens.length - this.order; i++) {
-                    const state = tokens.slice(i, i + this.order).join(' ').toLowerCase();
-                    const next = tokens[i + this.order];
+                // Build unigram frequencies with subsampling of very frequent tokens
+                for (const token of tokens) {
+                    const currentCount = this.unigrams.get(token) || 0;
 
-                    if (!this.chain[state]) {
-                        this.chain[state] = [];
-                    }
-                    this.chain[state].push(next);
+                    // STRATEGY: Subsample very frequent tokens (reduce their dominance)
+                    // Drop probability increases with frequency
+                    const dropProb = Math.min(0.85, (currentCount / totalTokens) * 8);
 
-                    // Track sentence starts for better initialization
-                    if (i === 0 || this.punctuation.includes(tokens[i - 1])) {
-                        this.startStates.push(state);
+                    if (Math.random() > dropProb) {
+                        this.unigrams.set(token, currentCount + 1);
                     }
                 }
-            }
 
-            // Get next word with fallback mechanism
-            getNext(currentState) {
-                let possibilities = this.chain[currentState];
+                // Train all orders from 1 to maxOrder
+                for (let order = 1; order <= this.maxOrder; order++) {
+                    // Initialize chain for this order
+                    if (!this.chains.has(order)) {
+                        this.chains.set(order, new Map());
+                    }
+                    const chain = this.chains.get(order);
 
-                // Fallback for higher orders: try lower order if no match
-                if (!possibilities || possibilities.length === 0) {
-                    const words = currentState.split(' ');
+                    for (let i = 0; i < tokens.length - order; i++) {
+                        // State is an array of tokens
+                        const stateArray = tokens.slice(i, i + order);
+                        const stateKey = stateArray.join(' ').toLowerCase();
+                        const next = tokens[i + order];
 
-                    // Try progressively shorter contexts
-                    for (let i = 1; i < words.length; i++) {
-                        const shorterState = words.slice(i).join(' ');
-                        possibilities = this.chain[shorterState];
-                        if (possibilities && possibilities.length > 0) {
-                            break;
+                        // Get or create transitions map for this state
+                        if (!chain.has(stateKey)) {
+                            chain.set(stateKey, new Map());
+                        }
+                        const transitions = chain.get(stateKey);
+
+                        // Get current count
+                        const currentCount = transitions.get(next) || 0;
+
+                        // STRATEGY: Limit count for immediate repetitions to reduce loops
+                        if (stateArray[stateArray.length - 1] === next) {
+                            // Cap repetition transitions
+                            transitions.set(next, Math.min(2, currentCount + 1));
+                        } else {
+                            transitions.set(next, currentCount + 1);
+                        }
+
+                        // Track sentence-starting states (only for maxOrder)
+                        if (order === this.maxOrder) {
+                            if (i === 0 || this.punctuation.includes(tokens[i - 1])) {
+                                this.startStates.push([...stateArray]); // Store as array
+                            }
                         }
                     }
                 }
+            }
 
-                if (!possibilities || possibilities.length === 0) {
+            /**
+             * Weighted random selection based on frequency counts
+             * @param {Map<string, number>} transitions - Map of word -> frequency
+             * @param {number} temperature - Controls randomness (default 1.0)
+             * @param {boolean} favorRare - If true, inverts distribution to favor rare words (for chaos)
+             */
+            weightedRandom(transitions, temperature = 1.0, favorRare = false) {
+                if (transitions.size === 0) {
                     return null;
                 }
 
-                return possibilities[Math.floor(Math.random() * possibilities.length)];
+                // Temperature = 0: return most probable word (or least if favorRare)
+                if (temperature <= 0) {
+                    let targetWord = '';
+                    let targetCount = favorRare ? Infinity : 0;
+                    for (const [word, count] of transitions.entries()) {
+                        if (favorRare ? (count < targetCount) : (count > targetCount)) {
+                            targetCount = count;
+                            targetWord = word;
+                        }
+                    }
+                    return targetWord;
+                }
+
+                // Apply temperature to weights
+                const adjustedWeights = new Map();
+                let total = 0;
+
+                for (const [word, count] of transitions.entries()) {
+                    // INVERTED DISTRIBUTION: favor rare words when favorRare=true
+                    let adjustedWeight;
+                    if (favorRare) {
+                        // Higher temperature = more chaos, favor rarer words
+                        adjustedWeight = Math.pow(1 / count, temperature);
+                    } else {
+                        // Normal distribution: higher temperature = flatten distribution
+                        adjustedWeight = Math.pow(count, 1 / temperature);
+                    }
+                    adjustedWeights.set(word, adjustedWeight);
+                    total += adjustedWeight;
+                }
+
+                // Weighted random selection
+                let randomWeight = Math.random() * total;
+
+                for (const [word, weight] of adjustedWeights.entries()) {
+                    if (randomWeight < weight) {
+                        return word;
+                    }
+                    randomWeight -= weight;
+                }
+
+                // Fallback (should rarely happen)
+                return adjustedWeights.keys().next().value;
             }
 
-            generate(length = 50) {
-                const states = Object.keys(this.chain);
-                if (states.length === 0) {
+            /**
+             * Mutate a token to create glitch/experimental variants
+             * Strategies: character deletion, duplication, case change, truncation
+             */
+            mutateToken(token) {
+                if (typeof token !== 'string' || token.length === 0) return token;
+
+                const mutation = Math.random();
+
+                if (mutation < 0.25 && token.length > 2) {
+                    // Delete random character
+                    const pos = Math.floor(Math.random() * token.length);
+                    return token.slice(0, pos) + token.slice(pos + 1);
+                } else if (mutation < 0.5 && token.length > 1) {
+                    // Duplicate random character
+                    const pos = Math.floor(Math.random() * token.length);
+                    return token.slice(0, pos + 1) + token[pos] + token.slice(pos + 1);
+                } else if (mutation < 0.75) {
+                    // Truncate
+                    const newLen = Math.max(1, Math.floor(token.length * 0.6));
+                    return token.slice(0, newLen);
+                } else {
+                    // Case scramble
+                    return token.split('').map(c =>
+                        Math.random() > 0.5 ? c.toUpperCase() : c.toLowerCase()
+                    ).join('');
+                }
+            }
+
+            /**
+             * Subsample transitions to reduce dominance of frequent words
+             */
+            subsampleTransitions(transitions, subsampleRate = 0.3) {
+                const reduced = new Map();
+                const maxCount = Math.max(...transitions.values());
+
+                for (const [word, count] of transitions.entries()) {
+                    // Higher count words get dropped more often
+                    const dropProb = Math.min(0.8, (count / maxCount) * subsampleRate);
+
+                    if (Math.random() > dropProb) {
+                        // Reduce count proportionally
+                        const reducedCount = Math.max(1, Math.floor(count * (1 - dropProb * 0.5)));
+                        reduced.set(word, reducedCount);
+                    }
+                }
+
+                return reduced.size > 0 ? reduced : transitions;
+            }
+
+            /**
+             * Hierarchical backoff: tries current order, falls back to lower orders
+             * @param {Array<string>} stateArray - Current state as array of tokens
+             * @param {number} order - Current order to try
+             * @param {number} temperature - Creativity parameter
+             * @param {boolean} favorRare - Favor rare words over common ones
+             */
+            getNext(stateArray, order, temperature = 1.0, favorRare = false) {
+                // Base case: Order 0 (unigram fallback)
+                if (order === 0) {
+                    return this.weightedRandom(this.unigrams, temperature, favorRare);
+                }
+
+                // Ensure we have the right state length
+                const relevantState = stateArray.slice(-order);
+                const stateKey = relevantState.join(' ').toLowerCase();
+
+                // Try to find transitions for this state
+                const chain = this.chains.get(order);
+                if (chain && chain.has(stateKey)) {
+                    const transitions = chain.get(stateKey);
+                    if (transitions.size > 0) {
+                        return this.weightedRandom(transitions, temperature, favorRare);
+                    }
+                }
+
+                // Backoff: try lower order
+                return this.getNext(stateArray, order - 1, temperature, favorRare);
+            }
+
+            /**
+             * Generate text with advanced entropy and mutation strategies
+             * @param {number} length - Maximum number of words to generate
+             * @param {number} startOrder - Order to start generation with (default: currentOrder)
+             * @param {number} temperature - Creativity control (1.0 = normal, >1 = creative, <1 = conservative)
+             */
+            generate(length = 50, startOrder = null, temperature = 1.0) {
+                if (this.startStates.length === 0) {
                     return "Please enter more text to generate variations. The algorithm needs at least a few complete sentences.";
                 }
 
-                // Start with a sentence-starting state if available
-                let currentState = this.startStates.length > 0
-                    ? this.startStates[Math.floor(Math.random() * this.startStates.length)]
-                    : states[Math.floor(Math.random() * states.length)];
+                // Use provided order or default to current order
+                const baseOrder = startOrder !== null ? startOrder : this.currentOrder;
 
-                let result = currentState.split(' ');
-                let sentenceLength = result.length;
+                // Adjust behavior based on order
+                const maxLength = baseOrder === 1 ? 15 : (baseOrder === 2 ? 25 : length);
+                const minLength = baseOrder === 1 ? 5 : 8;
 
-                // Generate text
-                for (let i = 0; i < length - this.order; i++) {
-                    const next = this.getNext(currentState);
+                // Pick random starting state
+                const startState = this.startStates[Math.floor(Math.random() * this.startStates.length)];
+                let stateArray = [...startState];
+                let result = [...startState];
 
-                    if (!next) {
-                        // Try to start a new sentence if stuck
-                        if (this.startStates.length > 0) {
-                            currentState = this.startStates[Math.floor(Math.random() * this.startStates.length)];
-                            continue;
+                // Generate tokens with dynamic strategies
+                for (let i = 0; i < maxLength - baseOrder; i++) {
+                    let next;
+
+                    // STRATEGY 1: Dynamic Order Switching (20% chance to change order mid-generation)
+                    let dynamicOrder = baseOrder;
+                    if (Math.random() < 0.2) {
+                        dynamicOrder = Math.max(1, Math.floor(Math.random() * (this.maxOrder + 1)));
+                    }
+
+                    // ORDER 1: Maximum chaos with inverted distribution
+                    if (baseOrder === 1) {
+                        if (Math.random() > 0.3) {
+                            // 70% use inverted distribution (favor rare words)
+                            next = this.weightedRandom(this.unigrams, 2.5, true);
                         } else {
+                            // 30% use bigram with high temp and favor rare
+                            next = this.getNext(stateArray, 1, 2.5, true);
+                        }
+                    }
+                    // ORDER 2: Moderate chaos with some structure
+                    else if (baseOrder === 2) {
+                        if (Math.random() > 0.2) {
+                            // 80% use normal approach with high temp
+                            next = this.getNext(stateArray, dynamicOrder, 1.5, false);
+                        } else {
+                            // 20% inject rare word
+                            next = this.weightedRandom(this.unigrams, 2.0, true);
+                        }
+                    }
+                    // ORDER 3-4: More structured but with occasional surprises
+                    else {
+                        if (Math.random() > 0.1) {
+                            // 90% normal hierarchical generation
+                            next = this.getNext(stateArray, dynamicOrder, temperature, false);
+                        } else {
+                            // 10% inject unexpected element
+                            next = this.weightedRandom(this.unigrams, 1.8, true);
+                        }
+                    }
+
+                    if (!next) break;
+
+                    // ADVANCED STRATEGY: Token-level mutation (glitch effect)
+                    if (baseOrder === 1 && Math.random() < 0.08) {
+                        next = this.mutateToken(next);
+                    }
+
+                    result.push(next);
+
+                    // STRATEGY 2: Structured Noise Injection (mutations)
+                    if (baseOrder <= 2 && Math.random() < 0.15 && result.length > 3) {
+                        const mutationType = Math.random();
+
+                        if (mutationType < 0.33) {
+                            // Omission: remove a word
+                            result.splice(result.length - 2, 1);
+                        } else if (mutationType < 0.66) {
+                            // Duplication: repeat last word
+                            result.push(result[result.length - 1]);
+                        } else {
+                            // Insertion: add random rare word
+                            result.push(this.weightedRandom(this.unigrams, 2.5, true));
+                        }
+                    }
+
+                    // ADVANCED STRATEGY: Random restart (cut-up technique enhancement)
+                    if (baseOrder <= 2 && Math.random() < 0.12 && this.startStates.length > 0) {
+                        // Jump to a completely different state
+                        stateArray = [...this.startStates[Math.floor(Math.random() * this.startStates.length)]];
+                        continue;
+                    }
+
+                    // STRATEGY 3: Cut-up technique on punctuation
+                    if (this.punctuation.includes(next)) {
+                        // For Order 1-2: 60% chance to splice in random fragment instead of ending
+                        if (baseOrder <= 2 && Math.random() < 0.6 && this.startStates.length > 0) {
+                            const randomStart = this.startStates[Math.floor(Math.random() * this.startStates.length)];
+                            const fragmentLength = Math.floor(Math.random() * Math.min(3, randomStart.length));
+                            result.push(...randomStart.slice(0, fragmentLength));
+                        }
+
+                        // Check if should end sentence
+                        if (baseOrder === 1 && result.length >= 5 && Math.random() > 0.4) {
+                            break;
+                        } else if (baseOrder === 2 && result.length >= 8 && Math.random() > 0.35) {
+                            break;
+                        } else if (baseOrder >= 3 && result.length >= minLength && Math.random() > 0.3) {
                             break;
                         }
                     }
 
-                    result.push(next);
-                    sentenceLength++;
-
-                    // End sentence naturally after punctuation if long enough
-                    if (this.punctuation.includes(next) && sentenceLength > 8 && Math.random() > 0.3) {
+                    // For Order 1, occasionally inject random punctuation
+                    if (baseOrder === 1 && result.length >= 5 && Math.random() > 0.85) {
+                        const randomPunct = this.punctuation[Math.floor(Math.random() * this.punctuation.length)];
+                        result.push(randomPunct);
                         break;
                     }
 
-                    // Update state
-                    const words = currentState.split(' ');
-                    words.shift();
-                    words.push(next.toLowerCase());
-                    currentState = words.join(' ');
+                    // Update state: remove first word, add new word
+                    stateArray.shift();
+                    stateArray.push(next);
                 }
 
-                // Capitalize first letter
-                if (result.length > 0) {
+                // Post-processing: capitalize first letter
+                if (result.length > 0 && result[0]) {
                     result[0] = result[0].charAt(0).toUpperCase() + result[0].slice(1);
                 }
 
-                // Ensure proper ending
+                // Ensure proper ending punctuation
                 const lastToken = result[result.length - 1];
                 if (!this.punctuation.includes(lastToken)) {
-                    result.push('.');
+                    if (baseOrder === 1) {
+                        // Order 1: varied punctuation
+                        const endings = ['.', '!', '?', '!', '?', '!'];
+                        result.push(endings[Math.floor(Math.random() * endings.length)]);
+                    } else {
+                        result.push('.');
+                    }
                 }
 
-                return result.join(' ').replace(/\s+([.!?,])/g, '$1');
+                // Join and fix spacing around punctuation
+                return result.join(' ').replace(/\s+([.,!?;:])/g, '$1');
             }
         }
 
-        const markov = new MarkovChain(3);
+        const markov = new MarkovChain(4); // Train all orders up to 4
         const markovInput = document.getElementById('markovInput');
         const markovOutput = document.getElementById('markovOutput');
         const generateMarkovBtn = document.getElementById('generateMarkovBtn');
@@ -2935,10 +4164,10 @@
 
         // Order descriptions
         const orderDescriptions = {
-            1: '<strong>Order 1 (Random):</strong> Looks at only 1 previous word. Creates chaotic, surreal text breaking grammatical rules. Perfect for experimental Dadaist poetry and maximum unpredictability.',
-            2: '<strong>Order 2 (Simple):</strong> Looks at 2 previous words. Creates simple sentences with basic grammar but frequent logic jumps. Ideal for fragmented dialogue and stream of consciousness.',
-            3: '<strong>Order 3 (Balanced):</strong> Analyzes sequences of 3 words. Creates text that maintains grammatical structure while introducing creative variations. Ideal for poetic and literary texts.',
-            4: '<strong>Order 4 (Coherent):</strong> Looks at 4 previous words. Creates highly coherent text, almost indistinguishable from the original. Best for long texts, novels, and essays. Requires more input text.'
+            1: '<strong>Order 1 (Chaotic):</strong> Uses 1-word context with automatic fallback to random selection. Creates highly unpredictable, surreal text with unexpected word combinations. Perfect for experimental and Dadaist poetry.',
+            2: '<strong>Order 2 (Fragmented):</strong> Uses 2-word context with fallback to unigrams. Creates fragmented but somewhat coherent text with frequent logic jumps. Good for stream-of-consciousness writing.',
+            3: '<strong>Order 3 (Balanced):</strong> Uses 3-word context with hierarchical backoff. Maintains grammatical structure while introducing creative variations. Best balance between originality and coherence. <em>Recommended for most uses.</em>',
+            4: '<strong>Order 4 (Coherent):</strong> Uses 4-word context with full backoff chain. Produces highly coherent text that closely mirrors the original style and structure. Best for literary texts and longer inputs.'
         };
 
         // Handle order button clicks
@@ -2950,20 +4179,15 @@
                 document.querySelectorAll('.markov-order-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                // Update markov order
-                markov.order = newOrder;
+                // Update markov current order (no need to retrain - all orders already trained)
+                markov.currentOrder = newOrder;
 
                 // Update description
                 if (orderDescription) {
                     orderDescription.innerHTML = orderDescriptions[newOrder];
                 }
 
-                // Re-train if there's text
-                if (markovInput.value.trim().length > 0) {
-                    markov.train(markovInput.value);
-                }
-
-                markovStatus.textContent = `Order ${newOrder} selected`;
+                markovStatus.textContent = `Order ${newOrder} selected - ready to generate!`;
                 setTimeout(() => {
                     markovStatus.textContent = 'Ready';
                 }, 1500);
@@ -3044,6 +4268,77 @@
             'Remember?', 'Very', 'You speak?', 'Everything', 'Beautiful',
             'I remember', 'Do you remember?', 'Beautiful beautiful'
         ];
+
+        // ===== TEXT GENERATION CONTROL =====
+        let lastTextUpdate = 0;
+        let currentDisplayedText = '';
+        let TEXT_UPDATE_INTERVALS = {
+            slow: 3000,      // 3 secondi per movimento lento
+            fast: 1500,      // 1.5s per movimento veloce
+            abrupt: 700      // 700ms per movimento brusco
+        };
+        let glitchIntensity = 0.08; // 8% default
+        let minTextSize = 0.8; // rem - dimensione minima
+        let maxTextSize = 6.0; // rem - dimensione massima
+
+        // ===== SLIDERS SETUP =====
+        const slowSpeedSlider = document.getElementById('slowSpeedSlider');
+        const fastSpeedSlider = document.getElementById('fastSpeedSlider');
+        const glitchIntensitySlider = document.getElementById('glitchIntensitySlider');
+        const minTextSizeSlider = document.getElementById('minTextSizeSlider');
+        const maxTextSizeSlider = document.getElementById('maxTextSizeSlider');
+
+        function updateTextSizeDisplay() {
+            const display = document.getElementById('textSizeRangeValue');
+            if (display) {
+                display.textContent = `${minTextSize.toFixed(1)}rem → ${maxTextSize.toFixed(1)}rem`;
+            }
+        }
+
+        if (slowSpeedSlider) {
+            slowSpeedSlider.addEventListener('input', (e) => {
+                TEXT_UPDATE_INTERVALS.slow = parseInt(e.target.value);
+                document.getElementById('slowSpeedValue').textContent = (TEXT_UPDATE_INTERVALS.slow / 1000).toFixed(1) + 's';
+            });
+        }
+
+        if (fastSpeedSlider) {
+            fastSpeedSlider.addEventListener('input', (e) => {
+                TEXT_UPDATE_INTERVALS.fast = parseInt(e.target.value);
+                document.getElementById('fastSpeedValue').textContent = (TEXT_UPDATE_INTERVALS.fast / 1000).toFixed(1) + 's';
+            });
+        }
+
+        if (glitchIntensitySlider) {
+            glitchIntensitySlider.addEventListener('input', (e) => {
+                glitchIntensity = parseInt(e.target.value) / 100;
+                document.getElementById('glitchIntensityValue').textContent = e.target.value + '%';
+            });
+        }
+
+        if (minTextSizeSlider) {
+            minTextSizeSlider.addEventListener('input', (e) => {
+                minTextSize = parseFloat(e.target.value);
+                // Assicura che min non superi max
+                if (minTextSize > maxTextSize) {
+                    minTextSize = maxTextSize;
+                    minTextSizeSlider.value = minTextSize;
+                }
+                updateTextSizeDisplay();
+            });
+        }
+
+        if (maxTextSizeSlider) {
+            maxTextSizeSlider.addEventListener('input', (e) => {
+                maxTextSize = parseFloat(e.target.value);
+                // Assicura che max non sia minore di min
+                if (maxTextSize < minTextSize) {
+                    maxTextSize = minTextSize;
+                    maxTextSizeSlider.value = maxTextSize;
+                }
+                updateTextSizeDisplay();
+            });
+        }
 
         // ==== FIX: Funzione per determinare il formato video supportato ====
         function getSupportedMimeType() {
@@ -3424,35 +4719,35 @@
                 
                 document.getElementById('motionIntensity').textContent = avgMotion.toFixed(1) + '%';
                 document.getElementById('visibleArea').textContent = visiblePercentage.toFixed(1) + '%';
-                
+
                 const textOverlay = document.getElementById('motionTextOverlay');
-                const randomWord = motionWords[Math.floor(Math.random() * motionWords.length)];
-                
+                const now = Date.now();
+
                 if (avgMotion < currentPreset.minMotionPercent) {
                     stillFrameCount++;
                     document.getElementById('movementType').textContent = 'Still';
-                    
+
                     if (stillFrameCount > 60) {
                         if (!repetitionInterval) {
                             let repeatCount = 0;
                             const baseWord = motionWords[Math.floor(Math.random() * 3)];
-                            
+
                             repetitionInterval = setInterval(() => {
                                 const repetitions = Math.floor(repeatCount / 4) + 1;
-                                const repeated = (baseWord + ' ').repeat(Math.min(repetitions, 4)).trim();
+                                const repeated = (baseWord + ' ').repeat(Math.min(repetitions, 3)).trim();
                                 textOverlay.textContent = repeated;
-                                textOverlay.style.fontSize = (1.2 + Math.sin(repeatCount * 0.2) * 0.3) + 'rem';
+                                textOverlay.style.fontSize = (1.2 + Math.sin(repeatCount * 0.2) * 0.2) + 'rem';
                                 textOverlay.style.opacity = '1';
                                 textOverlay.style.filter = 'none';
                                 textOverlay.style.letterSpacing = '0px';
                                 textOverlay.style.transform = 'translate(-50%, -50%)';
                                 textOverlay.style.color = '#fff';
                                 repeatCount++;
-                                
-                                if (repeatCount > 20) {
+
+                                if (repeatCount > 16) {
                                     repeatCount = 0;
                                 }
-                            }, 800);
+                            }, 1200); // Rallentato da 800ms a 1200ms
                         }
                     } else {
                         if (!repetitionInterval) {
@@ -3465,53 +4760,68 @@
                             textOverlay.style.color = '#888';
                         }
                     }
-                    
+
                 } else if (avgMotion >= currentPreset.minMotionPercent && avgMotion < (currentPreset.minMotionPercent * 4)) {
                     stillFrameCount = 0;
                     clearInterval(repetitionInterval);
                     repetitionInterval = null;
-                    
+
                     document.getElementById('movementType').textContent = 'Slow';
-                    
-                    textOverlay.textContent = randomWord;
-                    textOverlay.style.fontSize = '1.5rem';
+
+                    // Aggiorna testo con intervallo configurabile
+                    if (now - lastTextUpdate > TEXT_UPDATE_INTERVALS.slow) {
+                        currentDisplayedText = motionWords[Math.floor(Math.random() * motionWords.length)];
+                        lastTextUpdate = now;
+                    }
+
+                    // Usa la dimensione minima configurabile
+                    textOverlay.textContent = currentDisplayedText;
+                    textOverlay.style.fontSize = minTextSize + 'rem';
                     textOverlay.style.opacity = '1';
                     textOverlay.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,0.8))';
                     textOverlay.style.letterSpacing = '2px';
                     textOverlay.style.transform = 'translate(-50%, -50%)';
                     textOverlay.style.color = '#fff';
-                    
+
                 } else if (avgMotion >= (currentPreset.minMotionPercent * 4) && avgMotion < (currentPreset.minMotionPercent * 10)) {
                     stillFrameCount = 0;
                     clearInterval(repetitionInterval);
                     repetitionInterval = null;
-                    
+
                     document.getElementById('movementType').textContent = 'Fast';
-                    
-                    const fragments = randomWord.split(' ');
-                    const fragmentedText = fragments.map(word => {
-                        const chars = word.split('');
-                        return chars.map((char, i) => 
-                            i % 2 === 0 ? char : ' ' + char + ' '
-                        ).join('');
-                    }).join('  •  ');
-                    
-                    textOverlay.textContent = fragmentedText;
-                    textOverlay.style.fontSize = '1.2rem';
-                    textOverlay.style.opacity = '0.9';
-                    textOverlay.style.letterSpacing = (Math.random() * 8 + 2) + 'px';
-                    textOverlay.style.filter = 'blur(1px) drop-shadow(0 0 15px rgba(255,107,107,0.8))';
+
+                    // Aggiorna testo con intervallo configurabile
+                    if (now - lastTextUpdate > TEXT_UPDATE_INTERVALS.fast) {
+                        currentDisplayedText = motionWords[Math.floor(Math.random() * motionWords.length)];
+                        lastTextUpdate = now;
+                    }
+
+                    // Calcola dimensione del testo in base all'intensità del movimento
+                    // Scala da minTextSize a maxTextSize
+                    const normalizedMotion = Math.min(avgMotion / (currentPreset.minMotionPercent * 10), 1);
+                    const calculatedSize = minTextSize + (normalizedMotion * (maxTextSize - minTextSize));
+
+                    textOverlay.textContent = currentDisplayedText;
+                    textOverlay.style.fontSize = calculatedSize + 'rem';
+                    textOverlay.style.opacity = '0.95';
+                    textOverlay.style.letterSpacing = '3px';
+                    textOverlay.style.filter = 'drop-shadow(0 0 12px rgba(255,107,107,0.7))';
                     textOverlay.style.transform = 'translate(-50%, -50%)';
                     textOverlay.style.color = '#fff';
-                    
+
                 } else {
                     stillFrameCount = 0;
                     clearInterval(repetitionInterval);
                     repetitionInterval = null;
-                    
+
                     document.getElementById('movementType').textContent = 'Abrupt';
-                    
-                    applyGlitchEffect(textOverlay, randomWord);
+
+                    // Aggiorna testo con intervallo configurabile
+                    if (now - lastTextUpdate > TEXT_UPDATE_INTERVALS.abrupt) {
+                        currentDisplayedText = motionWords[Math.floor(Math.random() * motionWords.length)];
+                        lastTextUpdate = now;
+                        applyGlitchEffect(textOverlay, currentDisplayedText, avgMotion);
+                    }
                 }
             }
             
@@ -3519,33 +4829,42 @@
             motionAnimationFrame = requestAnimationFrame(detectMotionReveal);
         }
 
-        function applyGlitchEffect(element, text) {
-            const glitchChars = '!@#$%^&*()_+[]{}|;:,.<>?/~`';
+        function applyGlitchEffect(element, text, motionIntensity = 0) {
+            // Ridotti drasticamente i caratteri glitch - solo punteggiatura comune
+            const glitchChars = '.,!?-';
             let glitchedText = '';
-            
+
+            // Usa il valore dello slider per l'intensità del glitch
             for (let char of text) {
-                if (Math.random() < 0.35) {
+                if (char !== ' ' && Math.random() < glitchIntensity) {
                     glitchedText += glitchChars[Math.floor(Math.random() * glitchChars.length)];
                 } else {
                     glitchedText += char;
                 }
             }
-            
+
+            // Calcola dimensione del testo in base all'intensità del movimento
+            // Scala da minTextSize a maxTextSize in base al movimento
+            const normalizedMotion = Math.min(motionIntensity / 100, 1);
+            const calculatedSize = minTextSize + (normalizedMotion * (maxTextSize - minTextSize));
+
             element.textContent = glitchedText;
-            element.style.fontSize = (2.5 + Math.random() * 1) + 'rem';
-            element.style.color = `rgb(${100 + Math.random() * 155}, ${100 + Math.random() * 155}, ${255})`;
-            element.style.transform = `translate(${-50 + (Math.random() - 0.5) * 10}%, ${-50 + (Math.random() - 0.5) * 10}%) rotate(${(Math.random() - 0.5) * 8}deg)`;
-            element.style.filter = `hue-rotate(${Math.random() * 360}deg) blur(${Math.random() * 2}px) drop-shadow(0 0 20px rgba(72,219,251,0.9))`;
-            element.style.opacity = 0.8 + Math.random() * 0.2;
-            element.style.letterSpacing = (Math.random() * 10) + 'px';
-            
+            element.style.fontSize = (calculatedSize + Math.random() * 0.3) + 'rem';
+            element.style.color = `rgb(${150 + Math.random() * 105}, ${150 + Math.random() * 105}, ${255})`;
+            element.style.transform = `translate(${-50 + (Math.random() - 0.5) * 5}%, ${-50 + (Math.random() - 0.5) * 5}%) rotate(${(Math.random() - 0.5) * 4}deg)`;
+            element.style.filter = `hue-rotate(${Math.random() * 120}deg) blur(${Math.random() * 1}px) drop-shadow(0 0 15px rgba(72,219,251,0.7))`;
+            element.style.opacity = 0.85 + Math.random() * 0.15;
+            element.style.letterSpacing = (Math.random() * 4) + 'px';
+
+            // Recupero più veloce del testo originale
             setTimeout(() => {
                 element.textContent = text;
+                element.style.fontSize = calculatedSize + 'rem'; // Mantieni la dimensione calcolata
                 element.style.transform = 'translate(-50%, -50%)';
                 element.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,0.8))';
                 element.style.color = '#fff';
-                element.style.letterSpacing = '0px';
-            }, 150);
+                element.style.letterSpacing = '2px';
+            }, 100);
         }
 
         const stopMotionBtn = document.getElementById('stopMotionBtn');
@@ -3596,6 +4915,7 @@
                 }
             });
         }
+
 
         // ===== IMAGE MODAL =====
         const modal = document.getElementById('imageModal');
