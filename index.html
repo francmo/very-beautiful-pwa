@@ -5035,9 +5035,84 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('Service Worker registered!'))
+                    .then(reg => {
+                        console.log('✅ Service Worker registered!');
+
+                        // Check for updates every 60 seconds
+                        setInterval(() => {
+                            reg.update();
+                        }, 60000);
+
+                        // Listen for new service worker waiting
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available!
+                                    showUpdateNotification(newWorker);
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.log('Service Worker registration failed:', err));
             });
+
+            // Handle controller change (new SW activated)
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('🔄 New Service Worker activated, reloading...');
+                window.location.reload();
+            });
+        }
+
+        // Show update notification to user
+        function showUpdateNotification(worker) {
+            const updateBanner = document.createElement('div');
+            updateBanner.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                z-index: 10000;
+                font-weight: bold;
+                text-align: center;
+                animation: slideDown 0.5s ease;
+            `;
+            updateBanner.innerHTML = `
+                <div style="margin-bottom: 0.5rem;">🎉 New version available!</div>
+                <button onclick="this.parentElement.updateApp()" style="
+                    background: white;
+                    color: #667eea;
+                    border: none;
+                    padding: 0.5rem 1.5rem;
+                    border-radius: 5px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-right: 0.5rem;
+                ">Update Now</button>
+                <button onclick="this.parentElement.remove()" style="
+                    background: rgba(255,255,255,0.2);
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1.5rem;
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">Later</button>
+            `;
+            updateBanner.updateApp = () => {
+                worker.postMessage({ type: 'SKIP_WAITING' });
+                updateBanner.innerHTML = '<div>🔄 Updating...</div>';
+            };
+            document.body.appendChild(updateBanner);
+
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = '@keyframes slideDown { from { transform: translateX(-50%) translateY(-100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }';
+            document.head.appendChild(style);
         }
 
         console.log('✅ Very Beautiful Interactive - Complete Version with Sensitivity Presets');

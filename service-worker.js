@@ -1,4 +1,4 @@
-const CACHE_NAME = 'very-beautiful-v1.0.0';
+const CACHE_NAME = 'very-beautiful-v1.1.0';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -53,29 +53,50 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - NETWORK FIRST for HTML, cache first for assets
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // Network-first strategy for HTML pages (always fresh content)
+  if (event.request.headers.get('accept').includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Clone and cache the new version
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if offline
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Cache-first strategy for other assets (images, audio, etc.)
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
+          // Update cache in background
+          fetch(event.request).then(freshResponse => {
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, freshResponse);
+            });
+          }).catch(() => {});
           return response;
         }
 
-        // Clone the request
-        const fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(response => {
-          // Check if valid response
+        return fetch(event.request).then(response => {
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
 
-          // Clone the response
           const responseToCache = response.clone();
-
-          // Cache the fetched response for future use
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseToCache);
           });
@@ -83,7 +104,6 @@ self.addEventListener('fetch', event => {
           return response;
         }).catch(error => {
           console.error('[Service Worker] Fetch failed:', error);
-          // You could return a custom offline page here
           return new Response('Offline - content not available', {
             status: 503,
             statusText: 'Service Unavailable',
