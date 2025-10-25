@@ -2471,23 +2471,6 @@
             <div class="card" id="motionSection">
                 <h3>🎥 Advanced Motion Detection with Recording</h3>
                 <p>The webcam detects your movements and transforms the text in real-time. Record your performance with synchronized audio!  - First activate camera - </p>
-                
-                <!-- NUOVO: Preset di Sensibilità -->
-                <div class="sensitivity-presets">
-                    <span class="preset-label">🌙 Sensitivity:</span>
-                    <button class="preset-btn" id="presetDark" disabled>🌑 Dark Room</button>
-                    <button class="preset-btn active" id="presetNormal" disabled>☀️ Normal</button>
-                    <button class="preset-btn" id="presetBright" disabled>💡 Bright Light</button>
-                </div>
-
-                <div style="padding: 1rem; background: rgba(72, 219, 251, 0.05); border-radius: 10px; margin-bottom: 1rem;">
-                    <strong style="color: var(--accent-blue);">ℹ️ Sensitivity Info:</strong>
-                    <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-secondary);">
-                        <strong>🌑 Dark Room:</strong> Maximum sensitivity for low-light environments. Increases brightness and detects subtle movements.<br>
-                        <strong>☀️ Normal:</strong> Balanced settings for standard indoor lighting conditions.<br>
-                        <strong>💡 Bright Light:</strong> Reduced sensitivity for very bright environments. Prevents over-detection.
-                    </p>
-                </div>
 
                 <!-- Text Generation Controls -->
                 <div style="padding: 1.2rem; background: rgba(254, 202, 87, 0.08); border-radius: 10px; margin-bottom: 1rem; border: 1px solid rgba(254, 202, 87, 0.2);">
@@ -2566,6 +2549,23 @@
                         <button class="btn btn-secondary" id="downloadBtn" style="display: none;">💾 Download Video</button>
                         <div class="status" id="motionStatus">Camera inactive</div>
                         <div class="status" id="recordStatus" style="display: none;">Ready to record</div>
+                    </div>
+
+                    <!-- NUOVO: Preset di Sensibilità -->
+                    <div class="sensitivity-presets" style="margin-top: 1.5rem;">
+                        <span class="preset-label">🌙 Sensitivity:</span>
+                        <button class="preset-btn" id="presetDark" disabled>🌑 Dark Room</button>
+                        <button class="preset-btn active" id="presetNormal" disabled>☀️ Normal</button>
+                        <button class="preset-btn" id="presetBright" disabled>💡 Bright Light</button>
+                    </div>
+
+                    <div style="padding: 1rem; background: rgba(72, 219, 251, 0.05); border-radius: 10px; margin-top: 1rem;">
+                        <strong style="color: var(--accent-blue);">ℹ️ Sensitivity Info:</strong>
+                        <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-secondary);">
+                            <strong>🌑 Dark Room:</strong> Maximum sensitivity for low-light environments. Increases brightness and detects subtle movements.<br>
+                            <strong>☀️ Normal:</strong> Balanced settings for standard indoor lighting conditions.<br>
+                            <strong>💡 Bright Light:</strong> Reduced sensitivity for very bright environments. Prevents over-detection.
+                        </p>
                     </div>
 
                     <!-- Alert box per messaggi -->
